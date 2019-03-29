@@ -13,7 +13,7 @@ Additions
 * Adds back `/kill` - You don't have to do `/kill @p` anymore!  
 
 <details> 
-  <summary>Examples</summary><br><br>
+  <summary>Examples</summary><br>
 /gamemode
 <img src="https://raw.githubusercontent.com/marcus8448/RandomFiles/0d4e237efab79ad2edd67176bda9ac440a9cc129/gmo/gamemode.png" alt="/gamemode"><br>
 /gm
