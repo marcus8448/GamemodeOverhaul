@@ -1,0 +1,8 @@
+{
+  "gamemodeoverhaul.configgui.enablegmcommand": "Set this to false if you don't want the mod to add the '/gm' command",
+  "gamemodeoverhaul.configgui.enablereallyshortgmcommands": "Set this to false if you don't the mod to add '/gmc', '/gms', '/gmsp' and '/gma'",
+  "gamemodeoverhaul.configgui.enabledgmcommand": "Set this to false if you don't want the mod to add the '/dgm' command",
+  "gamemodeoverhaul.configgui.enablewelcomemessage": "Set this to false if you don't want the welcome message",
+  "gamemodeoverhaul.configgui.enabledebugmessages": "Set this to true if you want GamemodeOverhaul to log debug messages",
+  "gamemodeoverhaul.welcomemessage": "Thank you for using GamemodeOverhaul! [Version 1.13.2-1.3.5.5]"
+}
