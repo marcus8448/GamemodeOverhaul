@@ -1,7 +1,7 @@
 # GamemodeOverhaul
 [GamemodeOverhaul](https://marcus8448.github.io/GamemodeOverhaul) is a MinecraftForge mod for 1.13.2 that makes changing gamemodes much easier.
 
-<a href="https://github.com/marcus8448/GamemodeOverhaul/commits"><img src="https://img.shields.io/github/last-commit/marcus8448/GamemodeOverhaul.svg?label=latest%20commit&style=flat-square"> <a href="https://github.com/marcus8448/GamemodeOverhaul/issues"><img src="https://img.shields.io/github/issues/marcus8448/GamemodeOverhaul.svg?style=flat-square"> <a href="https://minecraft.curseforge.com/projects/GamemodeOverhaul/"><img src="http://cf.way2muchnoise.eu/full_GamemodeOverhaul_downloads.svg">    
+<a href="https://github.com/marcus8448/GamemodeOverhaul/commits"><img src="https://img.shields.io/github/last-commit/marcus8448/GamemodeOverhaul.svg?label=latest%20commit&style=flat-square"> <a href="https://github.com/marcus8448/GamemodeOverhaul/issues"><img src="https://img.shields.io/github/issues/marcus8448/GamemodeOverhaul.svg?style=flat-square"><a href="https://minecraft.curseforge.com/projects/GamemodeOverhaul/"><img src="http://cf.way2muchnoise.eu/full_GamemodeOverhaul_downloads.svg">    
 
 Additions
 ----------
