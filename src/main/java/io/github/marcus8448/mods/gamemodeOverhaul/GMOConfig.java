@@ -1,6 +1,6 @@
 package io.github.marcus8448.mods.gamemodeOverhaul;
 
-import net.minecraftforge.common.ForgeConfigSpec;
+/*import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
 import net.minecraftforge.common.ForgeConfigSpec.Builder;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -8,7 +8,7 @@ import net.minecraftforge.fml.config.ModConfig.ConfigReloading;
 import net.minecraftforge.fml.config.ModConfig.Loading;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.Marker;
-import org.apache.logging.log4j.MarkerManager;
+import org.apache.logging.log4j.MarkerManager;*/
 
 /**
  * Copyright (c) marcus8448 2019. All rights reserved.
@@ -17,7 +17,7 @@ import org.apache.logging.log4j.MarkerManager;
  */
 @SuppressWarnings("unused")
 public class GMOConfig {
-   private static final Marker CONFIG = MarkerManager.getMarker("Config");
+   /*private static final Marker CONFIG = MarkerManager.getMarker("Config");
    static final ForgeConfigSpec commonSpec;
    public static final GMOConfig.Common COMMON;
 
@@ -55,5 +55,5 @@ public class GMOConfig {
          this.enableDebugLogging = builder.comment("Set this to true if you want GamemodeOverhaul to log debug messages").translation("gamemodeoverhaul.configgui.enabledebugmessages").worldRestart().define("enableDebugMessages", false);
          builder.pop();
       }
-   }
+   }*/
 }

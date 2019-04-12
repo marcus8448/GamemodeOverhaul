@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "id": "gamemodeoverhaul",
+  "version": "1.14Pre1-1.0.0.0",
+
+  "name": "GamemodeOverhaul",
+  "description": "Adds back many pre-1.14/13 command arguments",
+  "authors": [
+    "marcus8448"
+  ],
+  "contact": {
+    "homepage": "https://minecraft.curseforge.com/projects/GamemodeOverhaul",
+    "sources": "https://github.com/marcus8448/GamemodeOverhaul"
+  },
+
+  "license": "",
+  "icon": "assets/gamemodeoverhaul/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "io.github.marcus8448.mods.gamemodeOverhaul.GamemodeOverhaul"
+    ]
+  },
+  "requires": {
+    "fabricloader": ">=0.4.0",
+    "fabric": "*"
+  }
+}
