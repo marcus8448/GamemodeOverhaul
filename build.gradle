@@ -22,12 +22,12 @@ processResources {
 	inputs.property "version", project.version
 
 	from(sourceSets.main.resources.srcDirs) {
-		include "gamemodeoverhaul.mod.json"
+		include "fabric.mod.json"
 		expand "gamemodeoverhaul": project.version
 	}
 
 	from(sourceSets.main.resources.srcDirs) {
-		exclude "gamemodeoverhaul.mod.json"
+		exclude "fabric.mod.json"
 	}
 }
 
