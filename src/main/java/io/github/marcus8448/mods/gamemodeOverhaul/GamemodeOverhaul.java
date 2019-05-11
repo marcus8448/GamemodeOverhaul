@@ -324,7 +324,7 @@ public class GamemodeOverhaul {
 
             for (GameType gameType : gameTypes) {
                 if (gameType != GameType.NOT_SET) {
-                    literalBuilder.then(((LiteralArgumentBuilder) Commands.literal(gameType.getName()).executes((context) -> GamemodeOverhaul.setGameMode(context, Collections.singleton(context.getSource().asPlayer()), gameType))).then(Commands.argument("target", EntityArgument.multipleEntities()).executes((cmdContext) -> GamemodeOverhaul.setGameMode(cmdContext, EntityArgument.getEntities(cmdContext, "target"), gameType))));
+                    literalBuilder.then(((LiteralArgumentBuilder) Commands.literal(gameType.getName()).executes((context) -> GamemodeOverhaul.setGameMode(context, Collections.singleton(context.getSource().asPlayer()), gameType))).then(Commands.argument("target", EntityArgument.multiplePlayers()).executes((cmdContext) -> GamemodeOverhaul.setGameMode(cmdContext, EntityArgument.getPlayers(cmdContext, "target"), gameType))));
                 }
             }
 
@@ -339,7 +339,7 @@ public class GamemodeOverhaul {
 
             for (GameType gameType : gameTypes) {
                 if (gameType != GameType.NOT_SET) {
-                    literalBuilder.then(((LiteralArgumentBuilder) Commands.literal(Integer.toString(gameType.getID())).executes((context) -> GamemodeOverhaul.setGameMode(context, Collections.singleton(context.getSource().asPlayer()), gameType))).then(Commands.argument("target", EntityArgument.multipleEntities()).executes((cmdContext) -> GamemodeOverhaul.setGameMode(cmdContext, EntityArgument.getEntities(cmdContext, "target"), gameType))));
+                    literalBuilder.then(((LiteralArgumentBuilder) Commands.literal(Integer.toString(gameType.getID())).executes((context) -> GamemodeOverhaul.setGameMode(context, Collections.singleton(context.getSource().asPlayer()), gameType))).then(Commands.argument("target", EntityArgument.multiplePlayers()).executes((cmdContext) -> GamemodeOverhaul.setGameMode(cmdContext, EntityArgument.getPlayers(cmdContext, "target"), gameType))));
                 }
             }
 
@@ -355,9 +355,9 @@ public class GamemodeOverhaul {
             for (GameType gameType : gameTypes) {
                 if (gameType != GameType.NOT_SET) {
                     if (gameType != GameType.SPECTATOR) {
-                        literalBuilder.then(((LiteralArgumentBuilder) Commands.literal(Character.toString(gameType.getName().toLowerCase().charAt(0))).executes((context) -> GamemodeOverhaul.setGameMode(context, Collections.singleton(context.getSource().asPlayer()), gameType))).then(Commands.argument("target", EntityArgument.multipleEntities()).executes((cmdContext) -> GamemodeOverhaul.setGameMode(cmdContext, EntityArgument.getEntities(cmdContext, "target"), gameType))));
+                        literalBuilder.then(((LiteralArgumentBuilder) Commands.literal(Character.toString(gameType.getName().toLowerCase().charAt(0))).executes((context) -> GamemodeOverhaul.setGameMode(context, Collections.singleton(context.getSource().asPlayer()), gameType))).then(Commands.argument("target", EntityArgument.multiplePlayers()).executes((cmdContext) -> GamemodeOverhaul.setGameMode(cmdContext, EntityArgument.getPlayers(cmdContext, "target"), gameType))));
                     } else {
-                        literalBuilder.then(((LiteralArgumentBuilder) Commands.literal("sp").executes((context) -> GamemodeOverhaul.setGameMode(context, Collections.singleton(context.getSource().asPlayer()), gameType))).then(Commands.argument("target", EntityArgument.multipleEntities()).executes((cmdContext) -> GamemodeOverhaul.setGameMode(cmdContext, EntityArgument.getEntities(cmdContext, "target"), gameType))));
+                        literalBuilder.then(((LiteralArgumentBuilder) Commands.literal("sp").executes((context) -> GamemodeOverhaul.setGameMode(context, Collections.singleton(context.getSource().asPlayer()), gameType))).then(Commands.argument("target", EntityArgument.multiplePlayers()).executes((cmdContext) -> GamemodeOverhaul.setGameMode(cmdContext, EntityArgument.getPlayers(cmdContext, "target"), gameType))));
                     }
                 }
             }
@@ -373,7 +373,7 @@ public class GamemodeOverhaul {
 
             for (GameType gameType : gameTypes) {
                 if (gameType != GameType.NOT_SET) {
-                    literalBuilder.then(((LiteralArgumentBuilder) Commands.literal(Integer.toString(gameType.getID())).executes((context) -> GamemodeOverhaul.setGameMode(context, Collections.singleton(context.getSource().asPlayer()), gameType))).then(Commands.argument("target", EntityArgument.multipleEntities()).executes((cmdContext) -> GamemodeOverhaul.setGameMode(cmdContext, EntityArgument.getEntities(cmdContext, "target"), gameType))));
+                    literalBuilder.then(((LiteralArgumentBuilder) Commands.literal(Integer.toString(gameType.getID())).executes((context) -> GamemodeOverhaul.setGameMode(context, Collections.singleton(context.getSource().asPlayer()), gameType))).then(Commands.argument("target", EntityArgument.multiplePlayers()).executes((cmdContext) -> GamemodeOverhaul.setGameMode(cmdContext, EntityArgument.getPlayers(cmdContext, "target"), gameType))));
                 }
             }
 
@@ -389,9 +389,9 @@ public class GamemodeOverhaul {
             for (GameType gameType : gameTypes) {
                 if (gameType != GameType.NOT_SET) {
                     if (gameType != GameType.SPECTATOR) {
-                        literalBuilder.then(((LiteralArgumentBuilder) Commands.literal(Character.toString(gameType.getName().toLowerCase().charAt(0))).executes((context) -> GamemodeOverhaul.setGameMode(context, Collections.singleton(context.getSource().asPlayer()), gameType))).then(Commands.argument("target", EntityArgument.multipleEntities()).executes((cmdContext) -> GamemodeOverhaul.setGameMode(cmdContext, EntityArgument.getEntities(cmdContext, "target"), gameType))));
+                        literalBuilder.then(((LiteralArgumentBuilder) Commands.literal(Character.toString(gameType.getName().toLowerCase().charAt(0))).executes((context) -> GamemodeOverhaul.setGameMode(context, Collections.singleton(context.getSource().asPlayer()), gameType))).then(Commands.argument("target", EntityArgument.multiplePlayers()).executes((cmdContext) -> GamemodeOverhaul.setGameMode(cmdContext, EntityArgument.getPlayers(cmdContext, "target"), gameType))));
                     } else {
-                        literalBuilder.then(((LiteralArgumentBuilder) Commands.literal("sp").executes((context) -> GamemodeOverhaul.setGameMode(context, Collections.singleton(context.getSource().asPlayer()), gameType))).then(Commands.argument("target", EntityArgument.multipleEntities()).executes((cmdContext) -> GamemodeOverhaul.setGameMode(cmdContext, EntityArgument.getEntities(cmdContext, "target"), gameType))));
+                        literalBuilder.then(((LiteralArgumentBuilder) Commands.literal("sp").executes((context) -> GamemodeOverhaul.setGameMode(context, Collections.singleton(context.getSource().asPlayer()), gameType))).then(Commands.argument("target", EntityArgument.multiplePlayers()).executes((cmdContext) -> GamemodeOverhaul.setGameMode(cmdContext, EntityArgument.getPlayers(cmdContext, "target"), gameType))));
                     }
                 }
             }
@@ -410,10 +410,10 @@ public class GamemodeOverhaul {
 
     public static class ReallyShortGMCommand {
         static void register(CommandDispatcher dispatcher) {
-            dispatcher.register((LiteralArgumentBuilder) ((LiteralArgumentBuilder) Commands.literal("gms").requires((source) -> source.hasPermissionLevel(2))).executes((context) -> GamemodeOverhaul.setGameMode(context, Collections.singleton(((CommandSource) context.getSource()).asPlayer()), GameType.SURVIVAL)).then(Commands.argument("targets", EntityArgument.multipleEntities()).executes((cmdContext) -> GamemodeOverhaul.setGameMode(cmdContext, EntityArgument.getEntities(cmdContext, "targets"), GameType.SURVIVAL))));
-            dispatcher.register((LiteralArgumentBuilder) ((LiteralArgumentBuilder) Commands.literal("gmc").requires((source) -> source.hasPermissionLevel(2))).executes((context) -> GamemodeOverhaul.setGameMode(context, Collections.singleton(((CommandSource) context.getSource()).asPlayer()), GameType.CREATIVE)).then(Commands.argument("targets", EntityArgument.multipleEntities()).executes((cmdContext) -> GamemodeOverhaul.setGameMode(cmdContext, EntityArgument.getEntities(cmdContext, "targets"), GameType.CREATIVE))));
-            dispatcher.register((LiteralArgumentBuilder) ((LiteralArgumentBuilder) Commands.literal("gma").requires((source) -> source.hasPermissionLevel(2))).executes((context) -> GamemodeOverhaul.setGameMode(context, Collections.singleton(((CommandSource) context.getSource()).asPlayer()), GameType.ADVENTURE)).then(Commands.argument("targets", EntityArgument.multipleEntities()).executes((cmdContext) -> GamemodeOverhaul.setGameMode(cmdContext, EntityArgument.getEntities(cmdContext, "targets"), GameType.ADVENTURE))));
-            dispatcher.register((LiteralArgumentBuilder) ((LiteralArgumentBuilder) Commands.literal("gmsp").requires((source) -> source.hasPermissionLevel(2))).executes((context) -> GamemodeOverhaul.setGameMode(context, Collections.singleton(((CommandSource) context.getSource()).asPlayer()), GameType.SPECTATOR)).then(Commands.argument("targets", EntityArgument.multipleEntities()).executes((cmdContext) -> GamemodeOverhaul.setGameMode(cmdContext, EntityArgument.getEntities(cmdContext, "targets"), GameType.SPECTATOR))));
+            dispatcher.register((LiteralArgumentBuilder) ((LiteralArgumentBuilder) Commands.literal("gms").requires((source) -> source.hasPermissionLevel(2))).executes((context) -> GamemodeOverhaul.setGameMode(context, Collections.singleton(((CommandSource) context.getSource()).asPlayer()), GameType.SURVIVAL)).then(Commands.argument("targets", EntityArgument.multiplePlayers()).executes((cmdContext) -> GamemodeOverhaul.setGameMode(cmdContext, EntityArgument.getPlayers(cmdContext, "targets"), GameType.SURVIVAL))));
+            dispatcher.register((LiteralArgumentBuilder) ((LiteralArgumentBuilder) Commands.literal("gmc").requires((source) -> source.hasPermissionLevel(2))).executes((context) -> GamemodeOverhaul.setGameMode(context, Collections.singleton(((CommandSource) context.getSource()).asPlayer()), GameType.CREATIVE)).then(Commands.argument("targets", EntityArgument.multiplePlayers()).executes((cmdContext) -> GamemodeOverhaul.setGameMode(cmdContext, EntityArgument.getPlayers(cmdContext, "targets"), GameType.CREATIVE))));
+            dispatcher.register((LiteralArgumentBuilder) ((LiteralArgumentBuilder) Commands.literal("gma").requires((source) -> source.hasPermissionLevel(2))).executes((context) -> GamemodeOverhaul.setGameMode(context, Collections.singleton(((CommandSource) context.getSource()).asPlayer()), GameType.ADVENTURE)).then(Commands.argument("targets", EntityArgument.multiplePlayers()).executes((cmdContext) -> GamemodeOverhaul.setGameMode(cmdContext, EntityArgument.getPlayers(cmdContext, "targets"), GameType.ADVENTURE))));
+            dispatcher.register((LiteralArgumentBuilder) ((LiteralArgumentBuilder) Commands.literal("gmsp").requires((source) -> source.hasPermissionLevel(2))).executes((context) -> GamemodeOverhaul.setGameMode(context, Collections.singleton(((CommandSource) context.getSource()).asPlayer()), GameType.SPECTATOR)).then(Commands.argument("targets", EntityArgument.multiplePlayers()).executes((cmdContext) -> GamemodeOverhaul.setGameMode(cmdContext, EntityArgument.getPlayers(cmdContext, "targets"), GameType.SPECTATOR))));
         }
     }
 }
