@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "gamemodeoverhaul",
-  "version": "1.14-1.0.0.2",
+  "version": "1.14-1.0.0.3",
 
   "name": "GamemodeOverhaul",
   "description": "Adds back many pre-1.14/13 command arguments",
