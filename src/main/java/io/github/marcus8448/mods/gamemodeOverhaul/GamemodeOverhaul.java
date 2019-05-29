@@ -129,7 +129,7 @@ public class GamemodeOverhaul implements ModInitializer {
             LiteralArgumentBuilder<ServerCommandSource> gmsp = CommandManager.literal("gmsp").requires((source) -> source.hasPermissionLevel(2)).executes((context -> changeMode(context, GameMode.SPECTATOR))).then(CommandManager.argument("target", EntityArgumentType.players()).executes((context -> changeMode(context, EntityArgumentType.getPlayers(context, "target"), GameMode.SPECTATOR))));
             GameMode[] gameModes = GameMode.values();
             for (GameMode mode : gameModes) {
-                if (mode != GameMode.INVALID) {
+                if (mode != GameMode.NOT_SET) {
                     gamemode.then(CommandManager.literal(Integer.toString(mode.getId())).executes((context) -> changeMode(context, Collections.singleton(context.getSource().getPlayer()), mode)).then(CommandManager.argument("target", EntityArgumentType.players()).executes((context) -> changeMode(context, EntityArgumentType.getPlayers(context, "target"), mode))));
                     modeify.then(CommandManager.literal(mode.getName()).executes((context) -> changeModes(context, mode)));
                     modeify.then(CommandManager.literal(Integer.toString(mode.getId())).executes((context) -> changeModes(context, mode)));
@@ -166,7 +166,7 @@ public class GamemodeOverhaul implements ModInitializer {
             LiteralArgumentBuilder<ServerCommandSource> dgmsp = CommandManager.literal("dgmsp").requires((source) -> source.hasPermissionLevel(2)).executes(context -> changeDefaultMode(context.getSource(), GameMode.SPECTATOR));
             GameMode[] modes = GameMode.values();
             for (GameMode mode : modes) {
-                if (mode != GameMode.INVALID) {
+                if (mode != GameMode.NOT_SET) {
                     defaultgamemode.then(CommandManager.literal(Integer.toString(mode.getId())).executes((context) -> changeDefaultMode(context.getSource(), mode)));
                     dgm.then(CommandManager.literal(Integer.toString(mode.getId())).executes((context) -> changeDefaultMode(context.getSource(), mode)));
                     dgm.then(CommandManager.literal(mode.getName()).executes((context) -> changeDefaultMode(context.getSource(), mode)));
