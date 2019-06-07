@@ -9,23 +9,25 @@ buildscript {
     }
 }
 apply plugin: 'net.minecraftforge.gradle'
+
 apply plugin: 'eclipse'
 
-version = '1.13.2-1.3.5.6'
-group = 'io.github.marcus8448.mods.gamemodeOverhaul'
-archivesBaseName = 'gamemodeoverhaul'
+version = '1.14.2-1.4.0.0'
+group = 'io.github.marcus8448.mods'
+archivesBaseName = 'gamemodeOverhaul'
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
 
 minecraft {
-    mappings channel: 'snapshot', version: '20180921-1.13'
-
+    mappings channel: 'snapshot', version: '20190526-1.13.2'
+    
     runs {
         client {
             workingDirectory project.file('run')
+            
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
-
+            
             mods {
                 gamemodeoverhaul {
                     source sourceSets.main
@@ -35,6 +37,7 @@ minecraft {
 
         server {
             workingDirectory project.file('run')
+
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
 
@@ -48,17 +51,17 @@ minecraft {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.13.2-25.0.193'
+    minecraft 'net.minecraftforge:forge:1.14.2-26.0.2'
 }
 
 jar {
     manifest {
         attributes([
-            "Specification-Title": project.archivesBaseName,
+            "Specification-Title": "gamemodeoverhaul",
             "Specification-Vendor": "marcus8448",
-            "Specification-Version": project.version,
+            "Specification-Version": "1.4",
             "Implementation-Title": project.name,
-            "Implementation-Version": project.version,
+            "Implementation-Version": "${version}",
             "Implementation-Vendor" :"marcus8448",
             "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
