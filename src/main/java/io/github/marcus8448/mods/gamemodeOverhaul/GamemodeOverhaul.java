@@ -13,6 +13,7 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.*;
 import net.minecraft.world.Difficulty;
+import net.minecraft.world.GameRules;
 import net.minecraft.world.GameType;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraftforge.common.MinecraftForge;
@@ -158,7 +159,7 @@ public class GamemodeOverhaul {
         if (source.getEntity() == player) {
             source.sendFeedback(new TranslationTextComponent("commands.gamemode.success.self", itextcomponent), true);
         } else {
-            if (source.getWorld().getGameRules().getBoolean("sendCommandFeedback")) {
+            if (source.getWorld().getGameRules().func_223586_b(GameRules.field_223611_n)) {
                 player.sendMessage(new TranslationTextComponent("gameMode.changed", itextcomponent));
             }
 
@@ -209,7 +210,7 @@ public class GamemodeOverhaul {
 
     private static int setDifficulty(CommandSource source, Difficulty difficulty) throws CommandSyntaxException {
         MinecraftServer minecraftserver = source.getServer();
-        if (minecraftserver.getWorld(DimensionType.OVERWORLD).getDifficulty() == difficulty) {
+        if (minecraftserver.getWorld(DimensionType.field_223227_a_).getDifficulty() == difficulty) {
             throw FAILED_EXCEPTION.create(difficulty.getTranslationKey());
         } else {
             minecraftserver.setDifficultyForAllWorlds(difficulty, true);
