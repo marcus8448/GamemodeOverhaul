@@ -7,15 +7,16 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.registry.CommandRegistry;
 import net.minecraft.command.arguments.EntityArgumentType;
-import net.minecraft.network.chat.ChatMessageType;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.MessageType;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.GameMode;
+import net.minecraft.world.GameRules;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.Marker;
@@ -34,15 +35,15 @@ public class GamemodeOverhaul implements ModInitializer {
     private static final Marker GAMEMODE_OVERHAUL = MarkerManager.getMarker("GamemodeOverhaul");
 
     private static void commandFeedback(ServerCommandSource source, ServerPlayerEntity player, GameMode mode) {
-        TextComponent textComponent = new TextComponent(new TranslatableComponent("gameMode." + mode.getName()).getText());
+        LiteralText text = new LiteralText(new TranslatableText("gameMode." + mode.getName()).asString());
         if (source.getEntity() == player) {
-            source.sendFeedback(new TranslatableComponent("commands.gamemode.success.self", textComponent), true);
+            source.sendFeedback(new TranslatableText("commands.gamemode.success.self", text), true);
         } else {
-            if (source.getWorld().getGameRules().getBoolean("sendCommandFeedback")) {
-                player.sendChatMessage(new TranslatableComponent("gameMode.changed", textComponent), ChatMessageType.SYSTEM);
+            if (source.getWorld().getGameRules().getBoolean(GameRules.field_19394)) {
+                player.sendChatMessage(new TranslatableText("gameMode.changed", text), MessageType.field_11733);
             }
 
-            source.sendFeedback(new TranslatableComponent("commands.gamemode.success.other", player.getDisplayName(), textComponent), true);
+            source.sendFeedback(new TranslatableText("commands.gamemode.success.other", player.getDisplayName(), text), true);
         }
 
     }
@@ -99,13 +100,13 @@ public class GamemodeOverhaul implements ModInitializer {
             }
         }
 
-        source.sendFeedback(new TranslatableComponent("commands.defaultgamemode.success", mode.getTextComponent()), true);
+        source.sendFeedback(new TranslatableText("commands.defaultgamemode.success", mode.getTranslatableName()), true);
         return i;
     }
 
     private static int kill(ServerCommandSource source) {
         source.getEntity().kill();
-        source.sendFeedback(new TranslatableComponent("commands.kill.success.single", source.getEntity().getDisplayName()), true);
+        source.sendFeedback(new TranslatableText("commands.kill.success.single", source.getEntity().getDisplayName()), true);
         return 1;
     }
 
@@ -123,19 +124,19 @@ public class GamemodeOverhaul implements ModInitializer {
             LiteralArgumentBuilder<ServerCommandSource> gamemode = CommandManager.literal("gamemode").requires((source) -> source.hasPermissionLevel(2));
             LiteralArgumentBuilder<ServerCommandSource> modeify = CommandManager.literal("modeify").requires((source) -> source.hasPermissionLevel(2));
             LiteralArgumentBuilder<ServerCommandSource> gm = CommandManager.literal("gm").requires((source) -> source.hasPermissionLevel(2));
-            LiteralArgumentBuilder<ServerCommandSource> gms = CommandManager.literal("gms").requires((source) -> source.hasPermissionLevel(2)).executes((context -> changeMode(context, GameMode.SURVIVAL))).then(CommandManager.argument("target", EntityArgumentType.players()).executes((context -> changeMode(context, EntityArgumentType.getPlayers(context, "target"), GameMode.SURVIVAL))));
-            LiteralArgumentBuilder<ServerCommandSource> gmc = CommandManager.literal("gmc").requires((source) -> source.hasPermissionLevel(2)).executes((context -> changeMode(context, GameMode.CREATIVE))).then(CommandManager.argument("target", EntityArgumentType.players()).executes((context -> changeMode(context, EntityArgumentType.getPlayers(context, "target"), GameMode.CREATIVE))));
-            LiteralArgumentBuilder<ServerCommandSource> gma = CommandManager.literal("gma").requires((source) -> source.hasPermissionLevel(2)).executes((context -> changeMode(context, GameMode.ADVENTURE))).then(CommandManager.argument("target", EntityArgumentType.players()).executes((context -> changeMode(context, EntityArgumentType.getPlayers(context, "target"), GameMode.ADVENTURE))));
-            LiteralArgumentBuilder<ServerCommandSource> gmsp = CommandManager.literal("gmsp").requires((source) -> source.hasPermissionLevel(2)).executes((context -> changeMode(context, GameMode.SPECTATOR))).then(CommandManager.argument("target", EntityArgumentType.players()).executes((context -> changeMode(context, EntityArgumentType.getPlayers(context, "target"), GameMode.SPECTATOR))));
+            LiteralArgumentBuilder<ServerCommandSource> gms = CommandManager.literal("gms").requires((source) -> source.hasPermissionLevel(2)).executes((context -> changeMode(context, GameMode.field_9215))).then(CommandManager.argument("target", EntityArgumentType.players()).executes((context -> changeMode(context, EntityArgumentType.getPlayers(context, "target"), GameMode.field_9215))));
+            LiteralArgumentBuilder<ServerCommandSource> gmc = CommandManager.literal("gmc").requires((source) -> source.hasPermissionLevel(2)).executes((context -> changeMode(context, GameMode.field_9220))).then(CommandManager.argument("target", EntityArgumentType.players()).executes((context -> changeMode(context, EntityArgumentType.getPlayers(context, "target"), GameMode.field_9220))));
+            LiteralArgumentBuilder<ServerCommandSource> gma = CommandManager.literal("gma").requires((source) -> source.hasPermissionLevel(2)).executes((context -> changeMode(context, GameMode.field_9216))).then(CommandManager.argument("target", EntityArgumentType.players()).executes((context -> changeMode(context, EntityArgumentType.getPlayers(context, "target"), GameMode.field_9216))));
+            LiteralArgumentBuilder<ServerCommandSource> gmsp = CommandManager.literal("gmsp").requires((source) -> source.hasPermissionLevel(2)).executes((context -> changeMode(context, GameMode.field_9219))).then(CommandManager.argument("target", EntityArgumentType.players()).executes((context -> changeMode(context, EntityArgumentType.getPlayers(context, "target"), GameMode.field_9219))));
             GameMode[] gameModes = GameMode.values();
             for (GameMode mode : gameModes) {
-                if (mode != GameMode.NOT_SET) {
+                if (mode != GameMode.field_9218) {
                     gamemode.then(CommandManager.literal(Integer.toString(mode.getId())).executes((context) -> changeMode(context, Collections.singleton(context.getSource().getPlayer()), mode)).then(CommandManager.argument("target", EntityArgumentType.players()).executes((context) -> changeMode(context, EntityArgumentType.getPlayers(context, "target"), mode))));
                     modeify.then(CommandManager.literal(mode.getName()).executes((context) -> changeModes(context, mode)));
                     modeify.then(CommandManager.literal(Integer.toString(mode.getId())).executes((context) -> changeModes(context, mode)));
                     gm.then(CommandManager.literal(mode.getName()).executes((context) -> changeMode(context, Collections.singleton(context.getSource().getPlayer()), mode))).then(CommandManager.argument("target", EntityArgumentType.players()).executes((context) -> changeMode(context, EntityArgumentType.getPlayers(context, "target"), mode)));
                     gm.then(CommandManager.literal(Integer.toString(mode.getId())).executes((context) -> changeMode(context, Collections.singleton(context.getSource().getPlayer()), mode))).then(CommandManager.argument("target", EntityArgumentType.players()).executes((context) -> changeMode(context, EntityArgumentType.getPlayers(context, "target"), mode)));
-                    if (mode != GameMode.SPECTATOR) {
+                    if (mode != GameMode.field_9219) {
                         gamemode.then(CommandManager.literal(Character.toString(mode.getName().charAt(0))).executes((context) -> changeMode(context, Collections.singleton(context.getSource().getPlayer()), mode))).then(CommandManager.argument("target", EntityArgumentType.players()).executes((context) -> changeMode(context, EntityArgumentType.getPlayers(context, "target"), mode)));
                         modeify.then(CommandManager.literal(Character.toString(mode.getName().charAt(0))).executes((context) -> changeModes(context, mode)));
                         gm.then(CommandManager.literal(Character.toString(mode.getName().charAt(0))).executes((context) -> changeMode(context, Collections.singleton(context.getSource().getPlayer()), mode))).then(CommandManager.argument("target", EntityArgumentType.players()).executes((context) -> changeMode(context, EntityArgumentType.getPlayers(context, "target"), mode)));
@@ -160,17 +161,17 @@ public class GamemodeOverhaul implements ModInitializer {
         private static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
             LiteralArgumentBuilder<ServerCommandSource> defaultgamemode = CommandManager.literal("defaultgamemode").requires((source) -> source.hasPermissionLevel(2));
             LiteralArgumentBuilder<ServerCommandSource> dgm = CommandManager.literal("dgm").requires((source) -> source.hasPermissionLevel(2));
-            LiteralArgumentBuilder<ServerCommandSource> dgms = CommandManager.literal("dgms").requires((source) -> source.hasPermissionLevel(2)).executes(context -> changeDefaultMode(context.getSource(), GameMode.SURVIVAL));
-            LiteralArgumentBuilder<ServerCommandSource> dgmc = CommandManager.literal("dgmc").requires((source) -> source.hasPermissionLevel(2)).executes(context -> changeDefaultMode(context.getSource(), GameMode.CREATIVE));
-            LiteralArgumentBuilder<ServerCommandSource> dgma = CommandManager.literal("dgma").requires((source) -> source.hasPermissionLevel(2)).executes(context -> changeDefaultMode(context.getSource(), GameMode.ADVENTURE));
-            LiteralArgumentBuilder<ServerCommandSource> dgmsp = CommandManager.literal("dgmsp").requires((source) -> source.hasPermissionLevel(2)).executes(context -> changeDefaultMode(context.getSource(), GameMode.SPECTATOR));
+            LiteralArgumentBuilder<ServerCommandSource> dgms = CommandManager.literal("dgms").requires((source) -> source.hasPermissionLevel(2)).executes(context -> changeDefaultMode(context.getSource(), GameMode.field_9215));
+            LiteralArgumentBuilder<ServerCommandSource> dgmc = CommandManager.literal("dgmc").requires((source) -> source.hasPermissionLevel(2)).executes(context -> changeDefaultMode(context.getSource(), GameMode.field_9220));
+            LiteralArgumentBuilder<ServerCommandSource> dgma = CommandManager.literal("dgma").requires((source) -> source.hasPermissionLevel(2)).executes(context -> changeDefaultMode(context.getSource(), GameMode.field_9216));
+            LiteralArgumentBuilder<ServerCommandSource> dgmsp = CommandManager.literal("dgmsp").requires((source) -> source.hasPermissionLevel(2)).executes(context -> changeDefaultMode(context.getSource(), GameMode.field_9219));
             GameMode[] modes = GameMode.values();
             for (GameMode mode : modes) {
-                if (mode != GameMode.NOT_SET) {
+                if (mode != GameMode.field_9218) {
                     defaultgamemode.then(CommandManager.literal(Integer.toString(mode.getId())).executes((context) -> changeDefaultMode(context.getSource(), mode)));
                     dgm.then(CommandManager.literal(Integer.toString(mode.getId())).executes((context) -> changeDefaultMode(context.getSource(), mode)));
                     dgm.then(CommandManager.literal(mode.getName()).executes((context) -> changeDefaultMode(context.getSource(), mode)));
-                    if (mode != GameMode.SPECTATOR) {
+                    if (mode != GameMode.field_9219) {
                         defaultgamemode.then(CommandManager.literal(Character.toString(mode.getName().charAt(0))).executes((context) -> changeDefaultMode(context.getSource(), mode)));
                         dgm.then(CommandManager.literal(Character.toString(mode.getName().charAt(0))).executes((context) -> changeDefaultMode(context.getSource(), mode)));
                     } else {
@@ -199,7 +200,7 @@ public class GamemodeOverhaul implements ModInitializer {
 
             dispatcher.register((difficultyCommand.requires((source) -> source.hasPermissionLevel(2))).executes((context) -> {
                 Difficulty difficulty = context.getSource().getWorld().getDifficulty();
-                context.getSource().sendFeedback(new TranslatableComponent("commands.difficulty.query", difficulty.toTextComponent()), false);
+                context.getSource().sendFeedback(new TranslatableText("commands.difficulty.query", difficulty.getTranslatableName()), false);
                 return difficulty.getId();
             }));
         }    }
