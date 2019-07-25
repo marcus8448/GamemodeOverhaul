@@ -10,6 +10,9 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
 
+import java.util.List;
+import java.util.function.Supplier;
+
 /**
  * Copyright (c) marcus8448 2019. All rights reserved.
  * @since 1.13.2-1.3.5.0
@@ -37,10 +40,16 @@ public class GMOConfig {
         COMMON = (GMOConfig.Common)specPair.getLeft();
     }
 
+
     public static class Common {
         final BooleanValue enableGMCommand;
         final BooleanValue enableReallyShortGMCommands;
         final BooleanValue enableDGMCommand;
+        final BooleanValue enableDifficultyCommand;
+        final BooleanValue enableKillCommand;
+        final BooleanValue enableToggledownfallCommand;
+        final BooleanValue enableXPCommand;
+        final ForgeConfigSpec.ConfigValue<String> xpCommandID;
         final BooleanValue enableWelcomeMessage;
         final BooleanValue enableDebugLogging;
 
@@ -49,6 +58,12 @@ public class GMOConfig {
             this.enableGMCommand = builder.comment("Set this to false if you don't want the mod to add the '/gm' command").translation("gamemodeoverhaul.configgui.enablegmcommand").worldRestart().define("enableGMCommand", true);
             this.enableReallyShortGMCommands = builder.comment("Set this to false if you don't the mod to add '/gmc', '/gms', '/gmsp' and '/gma'").translation("gamemodeoverhaul.configgui.enablereallyshortgmcommands").worldRestart().define("enableReallyShortGMCommands", true);
             this.enableDGMCommand = builder.comment("Set this to false if you don't want the mod to add the '/dgm' command").translation("gamemodeoverhaul.configgui.enabledgmcommand").worldRestart().define("enableDGMCommand", true);
+            this.enableDifficultyCommand = builder.comment("Set this to false if you don't want the mod to add the integer valuse for '/difficulty'").translation("gamemodeoverhaul.configgui.enabledifficultyintegers").worldRestart().define("enableDifficultyIntegerExtension", true);
+            this.enableKillCommand = builder.comment("Set this to false if you want to have '/kill' require an entity argument").translation("gamemodeoverhaul.configgui.enablekill").worldRestart().define("enableKillCommand", true);
+            this.enableToggledownfallCommand = builder.comment("Set this to false if you don't want to have the mod add '/toggledownfall' back").translation("gamemodeoverhaul.configgui.enabletoggledownfall").worldRestart().define("enableToggledownfallCommand", true);
+            this.enableXPCommand = builder.comment("Set this to false if you don't want to have the mod add '/xp <number>[L]' back").translation("gamemodeoverhaul.configgui.enablexp").worldRestart().define("enableXPCommand", true);
+            this.xpCommandID = builder.comment("Set this to whatever you want '/[THIS] <number[L]>' to be. It CANNOT be 'xp' due to limitations in Minecraft.").translation("gamemodeoverhaul.configgui.setXPStringValue").worldRestart().define("setXPCommandString", "xps");
+
             builder.pop();
             builder.comment("GamemodeOverhaul's misc. config settings").push("misc");
             this.enableWelcomeMessage = builder.comment("Set this to true if you want GamemodeOverhaul to send a welcome message when you join a world").translation("gamemodeoverhaul.configgui.enablewelcomemessage").worldRestart().define("enableWelcomeMessage", false);

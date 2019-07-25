@@ -1,13 +1,13 @@
 modLoader="javafml"
-loaderVersion="[27,)"
+loaderVersion="[28,)"
 issueTrackerURL="https://github.com/marcus8448/GamemodeOverhaul/issues/"
 #logoFile=""
 
 [[mods]]
     modId="gamemodeoverhaul"
-    version="1.14.2-1.4.0.0"
+    version="1.14.2-1.4.2.0"
     updateJSONURL="https://marcus8448.github.io/GamemodeOverhaul/version.json"
-    displayURL="https://marcus8448.github.io/GamemodeOverhaul"
+    displayURL="https://www.curseforge.com/minecraft/mc-mods/gamemodeoverhaul"
     displayName="GamemodeOverhaul"
     authors="marcus8448"
     description='''
@@ -18,18 +18,20 @@ Also adds even shorter gamemode changing commands ex. "/gmc" (creative)
 
 You may also use '/difficulty [id]' again!
 Plus much, much more!
+
+See the CurseForge page for more details: https://www.curseforge.com/minecraft/mc-mods/gamemodeoverhaul
 '''
 
 [[dependencies.gamemodeoverhaul]]
     modId="forge"
     mandatory=true
-    versionRange="[27,)"
+    versionRange="[28,)"
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.gamemodeoverhaul]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.14.3]"
+    versionRange="[1.14.4]"
     ordering="NONE"
     side="BOTH"

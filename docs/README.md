@@ -7,7 +7,7 @@ Additions
 ----------
 * Adds a new command `/gm` - Same as `/gamemode` but shorter
 * Allows you to use numbers and single characters to change gamemodes again (`/gamemode [id/number]`)
-* Allows you tu use `/defaultgamemode [id/number]` again
+* Allows you to use `/defaultgamemode [id/number]` again
 * Also add a alias for 'defaultgamemode' - `dgm`
 * Adds support for numbers in `/difficulty` (`/difficulty 1`)
 * Adds back `/kill` - You don't have to do `/kill @p` anymore!  

@@ -2,7 +2,14 @@
   "gamemodeoverhaul.configgui.enablegmcommand": "Set this to false if you don't want the mod to add the '/gm' command",
   "gamemodeoverhaul.configgui.enablereallyshortgmcommands": "Set this to false if you don't the mod to add '/gmc', '/gms', '/gmsp' and '/gma'",
   "gamemodeoverhaul.configgui.enabledgmcommand": "Set this to false if you don't want the mod to add the '/dgm' command",
+  "gamemodeoverhaul.configgui.enabledifficultyintegers": "Set this to false if you don't want the mod to add the integer valuse for '/difficulty'",
+  "gamemodeoverhaul.configgui.enablekill": "Set this to false if you want to have '/kill' require an entity argument",
+  "gamemodeoverhaul.configgui.enabletoggledownfall": "Set this to false if you don't want to have the mod add '/toggledownfall' back",
+  "gamemodeoverhaul.configgui.enablexp": "Set this to false if you don't want to have the mod add '/xp <number>[L]' back",
+  "gamemodeoverhaul.configgui.setXPStringValue": "Set this to whatever you want '/[THIS] <number[L]>' to be. It CANNOT be 'xp' due to limitations in Minecraft.",
   "gamemodeoverhaul.configgui.enablewelcomemessage": "Set this to false if you don't want the welcome message",
   "gamemodeoverhaul.configgui.enabledebugmessages": "Set this to true if you want GamemodeOverhaul to log debug messages",
-  "gamemodeoverhaul.welcomemessage": "Thank you for using GamemodeOverhaul! [Version 1.14.2-1.4.0.0]"
+  "commands.toggledownfall": "Toggled downfall",
+  "commands.xp.nan": "Not a number!",
+  "gamemodeoverhaul.welcomemessage": "Thank you for using GamemodeOverhaul! [Version 1.14.3-1.4.1.0]"
 }

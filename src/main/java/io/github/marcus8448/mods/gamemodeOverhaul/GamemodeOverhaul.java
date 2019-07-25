@@ -1,6 +1,7 @@
 package io.github.marcus8448.mods.gamemodeOverhaul;
 
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -38,14 +39,11 @@ import java.util.Collections;
  * Copyright (c) marcus8448 2019. All rights reserved.
  * @author marcus8448
  */
-@SuppressWarnings({"unused", "unchecked"})
 @Mod("gamemodeoverhaul")
 public class GamemodeOverhaul {
     static final Logger LOGGER = LogManager.getLogger("GamemodeOverhaul");
     private static final Marker GAMEMODE_OVERHAUL = MarkerManager.getMarker("GamemodeOverhaul");
     private static final Marker DEBUG = MarkerManager.getMarker("Debug");
-    private static final Marker LOADING = MarkerManager.getMarker("Loading...");
-    private static final Marker SUCCESS = MarkerManager.getMarker("Success!");
     private static final Marker ERROR = MarkerManager.getMarker("Error");
 
     private static final DynamicCommandExceptionType FAILED_EXCEPTION = new DynamicCommandExceptionType((object) -> new TranslationTextComponent("commands.difficulty.failure", object));
@@ -59,83 +57,71 @@ public class GamemodeOverhaul {
     }
 
     @SubscribeEvent
+    @SuppressWarnings("unused")
     public void onServerStarting(FMLServerStartingEvent event) {
-        CommandDispatcher dispatcher = event.getCommandDispatcher();
-        LOGGER.info(LOADING, "Registering Commands...");
+        CommandDispatcher<CommandSource> dispatcher = event.getCommandDispatcher();
+        LOGGER.info(GAMEMODE_OVERHAUL, "Registering Commands...");
 
         try {
-            GamemodeOverhaul.GameModeCommandInteger.register(dispatcher);
+            this.registerGamemode(dispatcher);
             if (GMOConfig.COMMON.enableDebugLogging.get()) {
-                LOGGER.debug(DEBUG, "Successfully registered '/gamemode' integer values!");
-            }
-
-            GamemodeOverhaul.GameModeCommandShort.register(dispatcher);
-            if (GMOConfig.COMMON.enableDebugLogging.get()) {
-                LOGGER.debug(DEBUG, "Successfully registered '/gamemode' short values!");
+                LOGGER.debug(DEBUG, "Successfully registered '/gamemode' integer + short values!");
             }
 
             if (GMOConfig.COMMON.enableGMCommand.get()) {
-                GamemodeOverhaul.GMCommand.register(dispatcher);
+                this.registerGM(dispatcher);
                 if (GMOConfig.COMMON.enableDebugLogging.get()) {
                     LOGGER.debug(DEBUG, "Successfully registered '/gm'!");
-                }
-
-                GamemodeOverhaul.GMCommandInteger.register(dispatcher);
-                if (GMOConfig.COMMON.enableDebugLogging.get()) {
-                    LOGGER.debug(DEBUG, "Successfully registered '/gm' integer values!");
-                }
-
-                GamemodeOverhaul.GMCommandShort.register(dispatcher);
-                if (GMOConfig.COMMON.enableDebugLogging.get()) {
-                    LOGGER.debug(DEBUG, "Successfully registered '/gm' short values!");
                 }
             }
 
             if (GMOConfig.COMMON.enableReallyShortGMCommands.get()) {
-                GamemodeOverhaul.ReallyShortGMCommand.register(dispatcher);
+                this.registerShortGM(dispatcher);
                 if (GMOConfig.COMMON.enableDebugLogging.get()) {
                     LOGGER.debug(DEBUG, "Successfully registered '/gm*' commands!");
                 }
             }
 
-            GamemodeOverhaul.DefaultGamemodeInteger.register(dispatcher);
+            this.registerDefaultGamemode(dispatcher);
             if (GMOConfig.COMMON.enableDebugLogging.get()) {
-                LOGGER.debug(DEBUG, "Successfully registered '/defaultgamemode' integer values!");
-            }
-
-            GamemodeOverhaul.DefaultGamemodeShort.register(dispatcher);
-            if (GMOConfig.COMMON.enableDebugLogging.get()) {
-                LOGGER.debug(DEBUG, "Successfully registered '/defaultgamemode' short values!");
+                LOGGER.debug(DEBUG, "Successfully registered '/defaultgamemode' integer + short values!");
             }
 
             if (GMOConfig.COMMON.enableDGMCommand.get()) {
-                GamemodeOverhaul.DGMCommand.register(dispatcher);
+                this.registerDGM(dispatcher);
                 if (GMOConfig.COMMON.enableDebugLogging.get()) {
                     LOGGER.debug(DEBUG, "Successfully registered '/dgm' command!");
                 }
+            }
 
-                GamemodeOverhaul.DGMInteger.register(dispatcher);
+            if (GMOConfig.COMMON.enableDifficultyCommand.get()) {
+                this.registerDifficulty(dispatcher);
                 if (GMOConfig.COMMON.enableDebugLogging.get()) {
-                    LOGGER.debug(DEBUG, "Successfully registered '/dgm' integer values!");
-                }
-
-                GamemodeOverhaul.DGMShort.register(dispatcher);
-                if (GMOConfig.COMMON.enableDebugLogging.get()) {
-                    LOGGER.debug(DEBUG, "Successfully registered '/dgm' short values!");
+                    LOGGER.debug(DEBUG, "Successfully registered '/difficulty' integer values!");
                 }
             }
 
-            GamemodeOverhaul.DifficultyCommandInteger.register(dispatcher);
-            if (GMOConfig.COMMON.enableDebugLogging.get()) {
-                LOGGER.debug(DEBUG, "Successfully registered '/difficulty' integer values!");
+            if (GMOConfig.COMMON.enableKillCommand.get()) {
+                this.registerKill(dispatcher);
+                if (GMOConfig.COMMON.enableDebugLogging.get()) {
+                    LOGGER.debug(DEBUG, "Successfully registered immediate '/kill'");
+                }
             }
 
-            GamemodeOverhaul.ImmediateKillCommand.register(dispatcher);
-            if (GMOConfig.COMMON.enableDebugLogging.get()) {
-                LOGGER.debug(DEBUG, "Successfully registered immediate '/kill'");
+            if (GMOConfig.COMMON.enableToggledownfallCommand.get()) {
+                this.registerToggledownfall(dispatcher);
+                if (GMOConfig.COMMON.enableDebugLogging.get()) {
+                    LOGGER.debug(DEBUG, "Successfully registered '/toggledownfall'");
+                }
             }
 
-            LOGGER.info(SUCCESS, "All commands have successfully been registered!");
+            if (GMOConfig.COMMON.enableXPCommand.get()) {
+                this.registerXP(dispatcher);
+                if (GMOConfig.COMMON.enableDebugLogging.get()) {
+                    LOGGER.debug(DEBUG, "Successfully registered '/xp'");
+                }
+            }
+            LOGGER.info(GAMEMODE_OVERHAUL, "All commands have successfully been registered!");
         } catch (Exception var4) {
             LOGGER.fatal(ERROR, "Could not register commands! Side: {}", FMLEnvironment.dist.name());
             LOGGER.fatal(ERROR, ExceptionUtils.getStackTrace(var4));
@@ -146,6 +132,7 @@ public class GamemodeOverhaul {
     }
 
     @SubscribeEvent
+    @SuppressWarnings("unused")
     public void welcomeMessage(EntityJoinWorldEvent event) {
         if (event.getEntity() instanceof ServerPlayerEntity && GMOConfig.COMMON.enableWelcomeMessage.get()) {
             ServerPlayerEntity player = (ServerPlayerEntity) event.getEntity();
@@ -159,7 +146,7 @@ public class GamemodeOverhaul {
         if (source.getEntity() == player) {
             source.sendFeedback(new TranslationTextComponent("commands.gamemode.success.self", itextcomponent), true);
         } else {
-            if (source.getWorld().getGameRules().func_223586_b(GameRules.field_223611_n)) {
+            if (source.getWorld().getGameRules().getBoolean(GameRules.SEND_COMMAND_FEEDBACK)) {
                 player.sendMessage(new TranslationTextComponent("gameMode.changed", itextcomponent));
             }
 
@@ -168,7 +155,7 @@ public class GamemodeOverhaul {
 
     }
 
-    private static int setGameMode(CommandContext<CommandSource> source, Collection<? extends Entity> players, GameType gameTypeIn) {
+    private int setGameMode(CommandContext<CommandSource> source, Collection<? extends Entity> players, GameType gameTypeIn) {
         int i = 0;
 
         for (Entity entity : players) {
@@ -185,13 +172,7 @@ public class GamemodeOverhaul {
         return i;
     }
 
-    /**
-     * Set Gametype of player who ran the command
-     *
-     * @param commandSourceIn Source of /gamemode command
-     * @param gamemode        New gametype
-     */
-    private static int setGameType(CommandSource commandSourceIn, GameType gamemode) {
+    private int setGameType(CommandSource commandSourceIn, GameType gamemode) {
         int i = 0;
         MinecraftServer minecraftserver = commandSourceIn.getServer();
         minecraftserver.setGameType(gamemode);
@@ -208,9 +189,9 @@ public class GamemodeOverhaul {
         return i;
     }
 
-    private static int setDifficulty(CommandSource source, Difficulty difficulty) throws CommandSyntaxException {
+    private int setDifficulty(CommandSource source, Difficulty difficulty) throws CommandSyntaxException {
         MinecraftServer minecraftserver = source.getServer();
-        if (minecraftserver.getWorld(DimensionType.field_223227_a_).getDifficulty() == difficulty) {
+        if (minecraftserver.getWorld(DimensionType.OVERWORLD).getDifficulty() == difficulty) {
             throw FAILED_EXCEPTION.create(difficulty.getTranslationKey());
         } else {
             minecraftserver.setDifficultyForAllWorlds(difficulty, true);
@@ -219,202 +200,247 @@ public class GamemodeOverhaul {
         }
     }
 
-    private static int killEntities(CommandSource source) {
+    private int killEntities(CommandSource source) {
         Entity e = source.getEntity();
-        e.onKillCommand();
-        source.sendFeedback(new TranslationTextComponent("commands.kill.success.single", e.getDisplayName()), true);
+        if (e != null) {
+            e.onKillCommand();
+            source.sendFeedback(new TranslationTextComponent("commands.kill.success.single", e.getDisplayName()), true);
+        }
 
         return 0;
     }
 
-    public static class DGMCommand {
-        static void register(CommandDispatcher dispatcher) {
-            LiteralArgumentBuilder literalBuilder = Commands.literal("dgm").requires((source) -> source.hasPermissionLevel(2));
+    private static int addExperience(CommandSource source, Collection<ServerPlayerEntity> players, int amount, boolean levels) {
+        if (players.size() <= 0) {
+            return 0;
+        }
 
-            for (GameType gametype : GameType.values()) {
-                if (gametype != GameType.NOT_SET) {
-                    literalBuilder.then(Commands.literal(gametype.getName()).executes((context) -> GamemodeOverhaul.setGameType(context.getSource(), gametype)));
+        for (ServerPlayerEntity player : players) {
+            if (levels) {
+                player.addExperienceLevel(amount);
+            } else {
+                player.giveExperiencePoints(amount);
+            }
+        }
+
+        if (players.size() == 1) {
+            source.sendFeedback(new TranslationTextComponent("commands.experience.add." + (levels ? "levels" : "points") + ".success.single", amount, players.iterator().next().getDisplayName()), true);
+        } else {
+            source.sendFeedback(new TranslationTextComponent("commands.experience.add." + (levels ? "levels" : "points") + ".success.multiple", amount, players.size()), true);
+        }
+
+        return players.size();
+    }
+
+    private void registerDGM(CommandDispatcher<CommandSource> dispatcher) {
+        LiteralArgumentBuilder<CommandSource> literalArgumentBuilder = Commands.literal("dgm").requires((source) -> source.hasPermissionLevel(2));
+
+        for (GameType gametype : GameType.values()) {
+            if (gametype != GameType.NOT_SET) {
+                literalArgumentBuilder.then(Commands.literal(gametype.getName()).executes((context) -> setGameType(context.getSource(), gametype)));
+            }
+        }
+
+        dispatcher.register(literalArgumentBuilder);
+
+        literalArgumentBuilder = Commands.literal("dgm").requires((source) -> source.hasPermissionLevel(2));
+
+        for (GameType gametype : GameType.values()) {
+            if (gametype != GameType.NOT_SET) {
+                literalArgumentBuilder.then(Commands.literal(Integer.toString(gametype.getID())).executes((context) -> setGameType(context.getSource(), gametype)));
+            }
+        }
+
+        dispatcher.register(literalArgumentBuilder);
+
+        literalArgumentBuilder = Commands.literal("dgm").requires((source) -> source.hasPermissionLevel(2));
+
+        for (GameType gametype : GameType.values()) {
+            if (gametype != GameType.NOT_SET) {
+                if (gametype != GameType.SPECTATOR) {
+                    literalArgumentBuilder.then(Commands.literal(Character.toString(gametype.getName().toLowerCase().charAt(0))).executes((context) -> setGameType(context.getSource(), gametype)));
+                } else {
+                    literalArgumentBuilder.then(Commands.literal("sp").executes((context) -> setGameType(context.getSource(), gametype)));
                 }
             }
-
-            dispatcher.register(literalBuilder);
         }
+
+        dispatcher.register(literalArgumentBuilder);
     }
 
-    public static class DGMInteger {
-        static void register(CommandDispatcher dispatcher) {
-            LiteralArgumentBuilder literalBuilder = Commands.literal("dgm").requires((source) -> source.hasPermissionLevel(2));
+    private void registerDefaultGamemode(CommandDispatcher<CommandSource> dispatcher) {
+        LiteralArgumentBuilder<CommandSource> literalArgumentBuilder = Commands.literal("defaultgamemode").requires((source) -> source.hasPermissionLevel(2));
 
-            for (GameType gametype : GameType.values()) {
-                if (gametype != GameType.NOT_SET) {
-                    literalBuilder.then(Commands.literal(Integer.toString(gametype.getID())).executes((context) -> GamemodeOverhaul.setGameType(context.getSource(), gametype)));
+        for (GameType gametype : GameType.values()) {
+            if (gametype != GameType.NOT_SET) {
+                literalArgumentBuilder.then(Commands.literal(Integer.toString(gametype.getID())).executes((context) -> setGameType(context.getSource(), gametype)));
+            }
+        }
+
+        dispatcher.register(literalArgumentBuilder);
+
+        literalArgumentBuilder = Commands.literal("defaultgamemode").requires((source) -> source.hasPermissionLevel(2));
+
+        for (GameType gametype : GameType.values()) {
+            if (gametype != GameType.NOT_SET) {
+                if (gametype != GameType.SPECTATOR) {
+                    literalArgumentBuilder.then(Commands.literal(Character.toString(gametype.getName().toLowerCase().charAt(0))).executes((context) -> setGameType(context.getSource(), gametype)));
+                } else {
+                    literalArgumentBuilder.then(Commands.literal("sp").executes((context) -> setGameType(context.getSource(), gametype)));
                 }
             }
-
-            dispatcher.register(literalBuilder);
         }
+
+        dispatcher.register(literalArgumentBuilder);
     }
 
-    public static class DGMShort {
-        static void register(CommandDispatcher dispatcher) {
-            LiteralArgumentBuilder literalBuilder = Commands.literal("dgm").requires((source) -> source.hasPermissionLevel(2));
+    private void registerDifficulty(CommandDispatcher<CommandSource> dispatcher) {
+        LiteralArgumentBuilder<CommandSource> literalArgumentBuilder = Commands.literal("difficulty").requires((source) -> source.hasPermissionLevel(2));
+        Difficulty[] difficulties = Difficulty.values();
 
-            for (GameType gametype : GameType.values()) {
-                if (gametype != GameType.NOT_SET) {
-                    if (gametype != GameType.SPECTATOR) {
-                        literalBuilder.then(Commands.literal(Character.toString(gametype.getName().toLowerCase().charAt(0))).executes((context) -> GamemodeOverhaul.setGameType(context.getSource(), gametype)));
-                    } else {
-                        literalBuilder.then(Commands.literal("sp").executes((context) -> GamemodeOverhaul.setGameType(context.getSource(), gametype)));
-                    }
+        for (Difficulty difficulty : difficulties) {
+            literalArgumentBuilder.then(Commands.literal(Integer.toString(difficulty.getId())).executes((context) -> setDifficulty(context.getSource(), difficulty)));
+        }
+
+        dispatcher.register(literalArgumentBuilder);
+    }
+
+    private void registerGM(CommandDispatcher<CommandSource> dispatcher) {
+        LiteralArgumentBuilder<CommandSource> literalArgumentBuilder = Commands.literal("gm").requires((commandSource) -> commandSource.hasPermissionLevel(2));
+        GameType[] gameTypes = GameType.values();
+
+        for (GameType gameType : gameTypes) {
+            if (gameType != GameType.NOT_SET) {
+                literalArgumentBuilder.then((Commands.literal(gameType.getName()).executes((context) -> setGameMode(context, Collections.singleton(context.getSource().asPlayer()), gameType))).then(Commands.argument("target", EntityArgument.players()).executes((cmdContext) -> setGameMode(cmdContext, EntityArgument.getPlayers(cmdContext, "target"), gameType))));
+            }
+        }
+
+        dispatcher.register(literalArgumentBuilder);
+
+        literalArgumentBuilder = Commands.literal("gm").requires((commandSource) -> commandSource.hasPermissionLevel(2));
+
+        for (GameType gameType : gameTypes) {
+            if (gameType != GameType.NOT_SET) {
+                literalArgumentBuilder.then((Commands.literal(Integer.toString(gameType.getID())).executes((context) -> setGameMode(context, Collections.singleton(context.getSource().asPlayer()), gameType))).then(Commands.argument("target", EntityArgument.players()).executes((cmdContext) -> setGameMode(cmdContext, EntityArgument.getPlayers(cmdContext, "target"), gameType))));
+            }
+        }
+
+        dispatcher.register(literalArgumentBuilder);
+
+        literalArgumentBuilder = Commands.literal("gm").requires((commandSource) -> commandSource.hasPermissionLevel(2));
+
+        for (GameType gameType : gameTypes) {
+            if (gameType != GameType.NOT_SET) {
+                if (gameType != GameType.SPECTATOR) {
+                    literalArgumentBuilder.then((Commands.literal(Character.toString(gameType.getName().toLowerCase().charAt(0))).executes((context) -> setGameMode(context, Collections.singleton(context.getSource().asPlayer()), gameType))).then(Commands.argument("target", EntityArgument.players()).executes((cmdContext) -> setGameMode(cmdContext, EntityArgument.getPlayers(cmdContext, "target"), gameType))));
+                } else {
+                    literalArgumentBuilder.then((Commands.literal("sp").executes((context) -> setGameMode(context, Collections.singleton(context.getSource().asPlayer()), gameType))).then(Commands.argument("target", EntityArgument.players()).executes((cmdContext) -> setGameMode(cmdContext, EntityArgument.getPlayers(cmdContext, "target"), gameType))));
                 }
             }
-
-            dispatcher.register(literalBuilder);
         }
+
+        dispatcher.register(literalArgumentBuilder);
     }
 
-    public static class DefaultGamemodeInteger {
-        static void register(CommandDispatcher dispatcher) {
-            LiteralArgumentBuilder literalBuilder = Commands.literal("defaultgamemode").requires((source) -> source.hasPermissionLevel(2));
+    private void registerGamemode(CommandDispatcher<CommandSource> dispatcher) {
+        LiteralArgumentBuilder<CommandSource> literalArgumentBuilder = Commands.literal("gamemode").requires((commandSource) -> commandSource.hasPermissionLevel(2));
+        GameType[] gameTypes = GameType.values();
 
-            for (GameType gametype : GameType.values()) {
-                if (gametype != GameType.NOT_SET) {
-                    literalBuilder.then(Commands.literal(Integer.toString(gametype.getID())).executes((context) -> GamemodeOverhaul.setGameType(context.getSource(), gametype)));
+        for (GameType gameType : gameTypes) {
+            if (gameType != GameType.NOT_SET) {
+                literalArgumentBuilder.then((Commands.literal(Integer.toString(gameType.getID())).executes((context) -> setGameMode(context, Collections.singleton(context.getSource().asPlayer()), gameType))).then(Commands.argument("target", EntityArgument.players()).executes((cmdContext) -> setGameMode(cmdContext, EntityArgument.getPlayers(cmdContext, "target"), gameType))));
+            }
+        }
+
+        dispatcher.register(literalArgumentBuilder);
+
+        literalArgumentBuilder = Commands.literal("gamemode").requires((commandSource) -> commandSource.hasPermissionLevel(2));
+
+        for (GameType gameType : gameTypes) {
+            if (gameType != GameType.NOT_SET) {
+                if (gameType != GameType.SPECTATOR) {
+                    literalArgumentBuilder.then((Commands.literal(Character.toString(gameType.getName().toLowerCase().charAt(0))).executes((context) -> setGameMode(context, Collections.singleton(context.getSource().asPlayer()), gameType))).then(Commands.argument("target", EntityArgument.players()).executes((cmdContext) -> setGameMode(cmdContext, EntityArgument.getPlayers(cmdContext, "target"), gameType))));
+                } else {
+                    literalArgumentBuilder.then((Commands.literal("sp").executes((context) -> setGameMode(context, Collections.singleton(context.getSource().asPlayer()), gameType))).then(Commands.argument("target", EntityArgument.players()).executes((cmdContext) -> setGameMode(cmdContext, EntityArgument.getPlayers(cmdContext, "target"), gameType))));
                 }
             }
-
-            dispatcher.register(literalBuilder);
         }
+
+        dispatcher.register(literalArgumentBuilder);
     }
 
-    public static class DefaultGamemodeShort {
-        static void register(CommandDispatcher dispatcher) {
-            LiteralArgumentBuilder literalBuilder = Commands.literal("defaultgamemode").requires((source) -> source.hasPermissionLevel(2));
+    private void registerKill(CommandDispatcher<CommandSource> dispatcher) {
+        dispatcher.register(Commands.literal("kill").requires((source) -> source.hasPermissionLevel(2)).executes((context) -> killEntities(context.getSource())));
+    }
 
-            for (GameType gametype : GameType.values()) {
-                if (gametype != GameType.NOT_SET) {
-                    if (gametype != GameType.SPECTATOR) {
-                        literalBuilder.then(Commands.literal(Character.toString(gametype.getName().toLowerCase().charAt(0))).executes((context) -> GamemodeOverhaul.setGameType(context.getSource(), gametype)));
-                    } else {
-                        literalBuilder.then(Commands.literal("sp").executes((context) -> GamemodeOverhaul.setGameType(context.getSource(), gametype)));
-                    }
+    private void registerShortGM(CommandDispatcher<CommandSource> dispatcher) {
+        dispatcher.register(Commands.literal("gms").requires((source) -> source.hasPermissionLevel(2)).executes((context) -> setGameMode(context, Collections.singleton(context.getSource().asPlayer()), GameType.SURVIVAL)).then(Commands.argument("targets", EntityArgument.players()).executes((cmdContext) -> setGameMode(cmdContext, EntityArgument.getPlayers(cmdContext, "targets"), GameType.SURVIVAL))));
+        dispatcher.register(Commands.literal("gmc").requires((source) -> source.hasPermissionLevel(2)).executes((context) -> setGameMode(context, Collections.singleton((context.getSource()).asPlayer()), GameType.CREATIVE)).then(Commands.argument("targets", EntityArgument.players()).executes((cmdContext) -> setGameMode(cmdContext, EntityArgument.getPlayers(cmdContext, "targets"), GameType.CREATIVE))));
+        dispatcher.register(Commands.literal("gma").requires((source) -> source.hasPermissionLevel(2)).executes((context) -> setGameMode(context, Collections.singleton((context.getSource()).asPlayer()), GameType.ADVENTURE)).then(Commands.argument("targets", EntityArgument.players()).executes((cmdContext) -> setGameMode(cmdContext, EntityArgument.getPlayers(cmdContext, "targets"), GameType.ADVENTURE))));
+        dispatcher.register(Commands.literal("gmsp").requires((source) -> source.hasPermissionLevel(2)).executes((context) -> setGameMode(context, Collections.singleton((context.getSource()).asPlayer()), GameType.SPECTATOR)).then(Commands.argument("targets", EntityArgument.players()).executes((cmdContext) -> setGameMode(cmdContext, EntityArgument.getPlayers(cmdContext, "targets"), GameType.SPECTATOR))));
+    }
+
+    private void registerToggledownfall(CommandDispatcher<CommandSource> dispatcher) {
+        dispatcher.register(Commands.literal("toggledownfall").requires((source) -> source.hasPermissionLevel(2)).executes(context -> {
+            if (!(context.getSource().getWorld().isRaining() || context.getSource().getWorld().getWorldInfo().isRaining() || context.getSource().getWorld().isThundering() || context.getSource().getWorld().getWorldInfo().isThundering())) {
+                context.getSource().getWorld().getWorldInfo().setClearWeatherTime(0);
+                context.getSource().getWorld().getWorldInfo().setRainTime(6000);
+                context.getSource().getWorld().getWorldInfo().setThunderTime(6000);
+                context.getSource().getWorld().getWorldInfo().setRaining(true);
+                context.getSource().getWorld().getWorldInfo().setThundering(false);
+                context.getSource().getWorld().getWorldInfo().setThundering(false);
+                context.getSource().sendFeedback(new TranslationTextComponent("commands.toggledownfall"), false);
+                return 6000;
+            } else {
+                context.getSource().getWorld().getWorldInfo().setClearWeatherTime(6000);
+                context.getSource().getWorld().getWorldInfo().setRainTime(0);
+                context.getSource().getWorld().getWorldInfo().setThunderTime(0);
+                context.getSource().getWorld().getWorldInfo().setRaining(false);
+                context.getSource().getWorld().getWorldInfo().setThundering(false);
+                context.getSource().sendFeedback(new TranslationTextComponent("commands.toggledownfall"), false);
+                return 6000;
+            }
+        }));
+    }
+
+    private void registerXP(CommandDispatcher<CommandSource> dispatcher) {
+        LiteralArgumentBuilder<CommandSource> literalArgumentBuilder = Commands.literal(GMOConfig.COMMON.xpCommandID.get()).requires((source) -> source.hasPermissionLevel(2)).then(Commands.argument("amount[L]", StringArgumentType.word()).executes(context -> {
+            String input = StringArgumentType.getString(context, "amount[L]");
+            if (input.toLowerCase().endsWith("l")) {
+                try {
+                    int i = Integer.parseInt(input.toLowerCase().replace("l", ""));
+                    return addExperience(context.getSource(), Collections.singleton(context.getSource().asPlayer()), i, true);
+                } catch (NumberFormatException ignore) {
+                    context.getSource().sendErrorMessage(new TranslationTextComponent("commands.xp.nan"));
+                }
+            } else {
+                try {
+                    int i = Integer.parseInt(input);
+                    return addExperience(context.getSource(), Collections.singleton(context.getSource().asPlayer()), i, false);
+                } catch (NumberFormatException ignore) {
+                    context.getSource().sendErrorMessage(new TranslationTextComponent("commands.xp.nan"));
                 }
             }
-
-            dispatcher.register(literalBuilder);
-        }
-    }
-
-    public static class DifficultyCommandInteger {
-        static void register(CommandDispatcher dispatcher) {
-            LiteralArgumentBuilder literalBuilder = Commands.literal("difficulty").requires((source) -> source.hasPermissionLevel(2));
-            Difficulty[] difficulties = Difficulty.values();
-
-            for (Difficulty difficulty : difficulties) {
-                literalBuilder.then(Commands.literal(Integer.toString(difficulty.getId())).executes((context) -> GamemodeOverhaul.setDifficulty(context.getSource(), difficulty)));
-            }
-
-            dispatcher.register(literalBuilder);
-        }
-    }
-
-    public static class GMCommand {
-        static void register(CommandDispatcher dispatcher) {
-            LiteralArgumentBuilder literalBuilder = Commands.literal("gm").requires((commandSource) -> commandSource.hasPermissionLevel(2));
-            GameType[] gameTypes = GameType.values();
-
-            for (GameType gameType : gameTypes) {
-                if (gameType != GameType.NOT_SET) {
-                    literalBuilder.then(((LiteralArgumentBuilder) Commands.literal(gameType.getName()).executes((context) -> GamemodeOverhaul.setGameMode(context, Collections.singleton(context.getSource().asPlayer()), gameType))).then(Commands.argument("target", EntityArgument.players()).executes((cmdContext) -> GamemodeOverhaul.setGameMode(cmdContext, EntityArgument.getPlayers(cmdContext, "target"), gameType))));
+            return 0;
+        }).then(Commands.argument("players", EntityArgument.players()).executes(context -> {
+            String input = StringArgumentType.getString(context, "amount[L]");
+            if (input.toLowerCase().endsWith("l")) {
+                try {
+                    int i = Integer.parseInt(input.toLowerCase().replace("l", ""));
+                    return addExperience(context.getSource(), EntityArgument.getPlayers(context, "players"), i, true);
+                } catch (NumberFormatException ignore) {
+                    context.getSource().sendErrorMessage(new TranslationTextComponent("commands.xp.nan"));
+                }
+            } else {
+                try {
+                    int i = Integer.parseInt(input);
+                    return addExperience(context.getSource(), EntityArgument.getPlayers(context, "players"), i, false);
+                } catch (NumberFormatException ignore) {
+                    context.getSource().sendErrorMessage(new TranslationTextComponent("commands.xp.nan"));
                 }
             }
-
-            dispatcher.register(literalBuilder);
-        }
-    }
-
-    public static class GMCommandInteger {
-        static void register(CommandDispatcher dispatcher) {
-            LiteralArgumentBuilder literalBuilder = Commands.literal("gm").requires((commandSource) -> commandSource.hasPermissionLevel(2));
-            GameType[] gameTypes = GameType.values();
-
-            for (GameType gameType : gameTypes) {
-                if (gameType != GameType.NOT_SET) {
-                    literalBuilder.then(((LiteralArgumentBuilder) Commands.literal(Integer.toString(gameType.getID())).executes((context) -> GamemodeOverhaul.setGameMode(context, Collections.singleton(context.getSource().asPlayer()), gameType))).then(Commands.argument("target", EntityArgument.players()).executes((cmdContext) -> GamemodeOverhaul.setGameMode(cmdContext, EntityArgument.getPlayers(cmdContext, "target"), gameType))));
-                }
-            }
-
-            dispatcher.register(literalBuilder);
-        }
-    }
-
-    public static class GMCommandShort {
-        static void register(CommandDispatcher dispatcher) {
-            LiteralArgumentBuilder literalBuilder = Commands.literal("gm").requires((commandSource) -> commandSource.hasPermissionLevel(2));
-            GameType[] gameTypes = GameType.values();
-
-            for (GameType gameType : gameTypes) {
-                if (gameType != GameType.NOT_SET) {
-                    if (gameType != GameType.SPECTATOR) {
-                        literalBuilder.then(((LiteralArgumentBuilder) Commands.literal(Character.toString(gameType.getName().toLowerCase().charAt(0))).executes((context) -> GamemodeOverhaul.setGameMode(context, Collections.singleton(context.getSource().asPlayer()), gameType))).then(Commands.argument("target", EntityArgument.players()).executes((cmdContext) -> GamemodeOverhaul.setGameMode(cmdContext, EntityArgument.getPlayers(cmdContext, "target"), gameType))));
-                    } else {
-                        literalBuilder.then(((LiteralArgumentBuilder) Commands.literal("sp").executes((context) -> GamemodeOverhaul.setGameMode(context, Collections.singleton(context.getSource().asPlayer()), gameType))).then(Commands.argument("target", EntityArgument.players()).executes((cmdContext) -> GamemodeOverhaul.setGameMode(cmdContext, EntityArgument.getPlayers(cmdContext, "target"), gameType))));
-                    }
-                }
-            }
-
-            dispatcher.register(literalBuilder);
-        }
-    }
-
-    public static class GameModeCommandInteger {
-        static void register(CommandDispatcher dispatcher) {
-            LiteralArgumentBuilder literalBuilder = Commands.literal("gamemode").requires((commandSource) -> commandSource.hasPermissionLevel(2));
-            GameType[] gameTypes = GameType.values();
-
-            for (GameType gameType : gameTypes) {
-                if (gameType != GameType.NOT_SET) {
-                    literalBuilder.then(((LiteralArgumentBuilder) Commands.literal(Integer.toString(gameType.getID())).executes((context) -> GamemodeOverhaul.setGameMode(context, Collections.singleton(context.getSource().asPlayer()), gameType))).then(Commands.argument("target", EntityArgument.players()).executes((cmdContext) -> GamemodeOverhaul.setGameMode(cmdContext, EntityArgument.getPlayers(cmdContext, "target"), gameType))));
-                }
-            }
-
-            dispatcher.register(literalBuilder);
-        }
-    }
-
-    public static class GameModeCommandShort {
-        static void register(CommandDispatcher dispatcher) {
-            LiteralArgumentBuilder literalBuilder = Commands.literal("gamemode").requires((commandSource) -> commandSource.hasPermissionLevel(2));
-            GameType[] gameTypes = GameType.values();
-
-            for (GameType gameType : gameTypes) {
-                if (gameType != GameType.NOT_SET) {
-                    if (gameType != GameType.SPECTATOR) {
-                        literalBuilder.then(((LiteralArgumentBuilder) Commands.literal(Character.toString(gameType.getName().toLowerCase().charAt(0))).executes((context) -> GamemodeOverhaul.setGameMode(context, Collections.singleton(context.getSource().asPlayer()), gameType))).then(Commands.argument("target", EntityArgument.players()).executes((cmdContext) -> GamemodeOverhaul.setGameMode(cmdContext, EntityArgument.getPlayers(cmdContext, "target"), gameType))));
-                    } else {
-                        literalBuilder.then(((LiteralArgumentBuilder) Commands.literal("sp").executes((context) -> GamemodeOverhaul.setGameMode(context, Collections.singleton(context.getSource().asPlayer()), gameType))).then(Commands.argument("target", EntityArgument.players()).executes((cmdContext) -> GamemodeOverhaul.setGameMode(cmdContext, EntityArgument.getPlayers(cmdContext, "target"), gameType))));
-                    }
-                }
-            }
-
-            dispatcher.register(literalBuilder);
-        }
-    }
-
-    public static class ImmediateKillCommand {
-        static void register(CommandDispatcher dispatcher) {
-            LiteralArgumentBuilder literalBuilder = Commands.literal("kill").requires((source) -> source.hasPermissionLevel(2));
-            literalBuilder.executes((context) -> GamemodeOverhaul.killEntities((CommandSource) context.getSource()));
-            dispatcher.register(literalBuilder);
-        }
-    }
-
-    public static class ReallyShortGMCommand {
-        static void register(CommandDispatcher dispatcher) {
-            dispatcher.register((LiteralArgumentBuilder) ((LiteralArgumentBuilder) Commands.literal("gms").requires((source) -> source.hasPermissionLevel(2))).executes((context) -> GamemodeOverhaul.setGameMode(context, Collections.singleton(((CommandSource) context.getSource()).asPlayer()), GameType.SURVIVAL)).then(Commands.argument("targets", EntityArgument.players()).executes((cmdContext) -> GamemodeOverhaul.setGameMode(cmdContext, EntityArgument.getPlayers(cmdContext, "targets"), GameType.SURVIVAL))));
-            dispatcher.register((LiteralArgumentBuilder) ((LiteralArgumentBuilder) Commands.literal("gmc").requires((source) -> source.hasPermissionLevel(2))).executes((context) -> GamemodeOverhaul.setGameMode(context, Collections.singleton(((CommandSource) context.getSource()).asPlayer()), GameType.CREATIVE)).then(Commands.argument("targets", EntityArgument.players()).executes((cmdContext) -> GamemodeOverhaul.setGameMode(cmdContext, EntityArgument.getPlayers(cmdContext, "targets"), GameType.CREATIVE))));
-            dispatcher.register((LiteralArgumentBuilder) ((LiteralArgumentBuilder) Commands.literal("gma").requires((source) -> source.hasPermissionLevel(2))).executes((context) -> GamemodeOverhaul.setGameMode(context, Collections.singleton(((CommandSource) context.getSource()).asPlayer()), GameType.ADVENTURE)).then(Commands.argument("targets", EntityArgument.players()).executes((cmdContext) -> GamemodeOverhaul.setGameMode(cmdContext, EntityArgument.getPlayers(cmdContext, "targets"), GameType.ADVENTURE))));
-            dispatcher.register((LiteralArgumentBuilder) ((LiteralArgumentBuilder) Commands.literal("gmsp").requires((source) -> source.hasPermissionLevel(2))).executes((context) -> GamemodeOverhaul.setGameMode(context, Collections.singleton(((CommandSource) context.getSource()).asPlayer()), GameType.SPECTATOR)).then(Commands.argument("targets", EntityArgument.players()).executes((cmdContext) -> GamemodeOverhaul.setGameMode(cmdContext, EntityArgument.getPlayers(cmdContext, "targets"), GameType.SPECTATOR))));
-        }
+            return 0;
+        })));
+        dispatcher.register(literalArgumentBuilder);
     }
 }

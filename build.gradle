@@ -12,14 +12,14 @@ apply plugin: 'net.minecraftforge.gradle'
 
 apply plugin: 'eclipse'
 
-version = '1.14.3-1.4.0.1'
+version = '1.14.4-1.4.2.0'
 group = 'io.github.marcus8448.mods'
-archivesBaseName = 'gamemodeOverhaul'
+archivesBaseName = 'GamemodeOverhaul'
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
 
 minecraft {
-    mappings channel: 'snapshot', version: '20190621-1.14.2'
+    mappings channel: 'snapshot', version: '20190724-1.14.3'
     
     runs {
         client {
@@ -51,7 +51,7 @@ minecraft {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.14.3-27.0.12'
+    minecraft 'net.minecraftforge:forge:1.14.4-28.0.14'
 }
 
 jar {
