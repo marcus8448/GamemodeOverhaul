@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
   "id": "gamemodeoverhaul",
-  "version": "1.14.4-1.0.1.1",
+  "version": "19w34a-1.0.1.2",
 
   "name": "GamemodeOverhaul",
-  "description": "Adds back many pre-1.14/13 command arguments",
+  "description": "Adds back many pre-1.15/14/13 command arguments",
   "authors": [
     "marcus8448"
   ],
