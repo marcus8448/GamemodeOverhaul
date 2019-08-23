@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "gamemodeoverhaul",
-  "version": "1.14.4-1.0.1.0",
+  "version": "1.14.4-1.0.1.1",
 
   "name": "GamemodeOverhaul",
   "description": "Adds back many pre-1.14/13 command arguments",
@@ -9,7 +9,7 @@
     "marcus8448"
   ],
   "contact": {
-    "homepage": "https://minecraft.curseforge.com/projects/GamemodeOverhaul",
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/gamemodeoverhaul",
     "sources": "https://github.com/marcus8448/GamemodeOverhaul"
   },
 
