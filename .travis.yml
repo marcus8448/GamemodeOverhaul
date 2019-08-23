@@ -8,6 +8,8 @@ cache:
   directories:
     - '$HOME/.m2'
     - '$HOME/.gradle'
+before_install:
+  - chmod +x gradlew
 before_cache:
     - rm -f $HOME/.gradle/caches/*/*.lock
 script: ./gradlew check -is
