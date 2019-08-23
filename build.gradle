@@ -12,7 +12,7 @@ apply plugin: 'net.minecraftforge.gradle'
 
 apply plugin: 'eclipse'
 
-version = '1.14.4-1.4.2.0'
+version = '1.14.4-1.4.2.1'
 group = 'io.github.marcus8448.mods'
 archivesBaseName = 'GamemodeOverhaul'
 
@@ -51,7 +51,7 @@ minecraft {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.14.4-28.0.14'
+    minecraft 'net.minecraftforge:forge:1.14.4-28.0.55'
 }
 
 jar {

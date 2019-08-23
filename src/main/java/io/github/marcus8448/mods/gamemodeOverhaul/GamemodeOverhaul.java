@@ -25,8 +25,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig.Type;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.loading.FMLEnvironment;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.Marker;
@@ -59,10 +57,10 @@ public class GamemodeOverhaul {
     @SubscribeEvent
     @SuppressWarnings("unused")
     public void onServerStarting(FMLServerStartingEvent event) {
-        CommandDispatcher<CommandSource> dispatcher = event.getCommandDispatcher();
-        LOGGER.info(GAMEMODE_OVERHAUL, "Registering Commands...");
-
         try {
+            CommandDispatcher<CommandSource> dispatcher = event.getCommandDispatcher();
+            LOGGER.info(GAMEMODE_OVERHAUL, "Registering Commands...");
+
             this.registerGamemode(dispatcher);
             if (GMOConfig.COMMON.enableDebugLogging.get()) {
                 LOGGER.debug(DEBUG, "Successfully registered '/gamemode' integer + short values!");
@@ -118,13 +116,13 @@ public class GamemodeOverhaul {
             if (GMOConfig.COMMON.enableXPCommand.get()) {
                 this.registerXP(dispatcher);
                 if (GMOConfig.COMMON.enableDebugLogging.get()) {
-                    LOGGER.debug(DEBUG, "Successfully registered '/xp'");
+                    LOGGER.debug(DEBUG, "Successfully registered '/{}'", GMOConfig.COMMON.xpCommandID.get());
                 }
             }
             LOGGER.info(GAMEMODE_OVERHAUL, "All commands have successfully been registered!");
-        } catch (Exception var4) {
-            LOGGER.fatal(ERROR, "Could not register commands! Side: {}", FMLEnvironment.dist.name());
-            LOGGER.fatal(ERROR, ExceptionUtils.getStackTrace(var4));
+        } catch (Throwable var4) {
+            LOGGER.fatal(ERROR, "Failed to register commands!");
+            var4.printStackTrace();
             LOGGER.fatal(ERROR, "Please report this to the issues page at https://github.com/marcus8448/GamemodeOverhaul/issues/ ");
             LOGGER.fatal(ERROR, "You will still be able to play regularly, but you won't be able to use certain (or all) things added by the mod ('/gm' etc)");
         }
@@ -138,7 +136,6 @@ public class GamemodeOverhaul {
             ServerPlayerEntity player = (ServerPlayerEntity) event.getEntity();
             player.sendMessage((new TranslationTextComponent("gamemodeoverhaul.welcomemessage")).setStyle((new Style()).setColor(TextFormatting.BLUE)), ChatType.SYSTEM);
         }
-
     }
 
     private static void sendGameModeFeedback(CommandSource source, ServerPlayerEntity player, GameType gameTypeIn) {
@@ -149,10 +146,8 @@ public class GamemodeOverhaul {
             if (source.getWorld().getGameRules().getBoolean(GameRules.SEND_COMMAND_FEEDBACK)) {
                 player.sendMessage(new TranslationTextComponent("gameMode.changed", itextcomponent));
             }
-
             source.sendFeedback(new TranslationTextComponent("commands.gamemode.success.other", player.getDisplayName(), itextcomponent), true);
         }
-
     }
 
     private int setGameMode(CommandContext<CommandSource> source, Collection<? extends Entity> players, GameType gameTypeIn) {
@@ -168,7 +163,6 @@ public class GamemodeOverhaul {
                 }
             }
         }
-
         return i;
     }
 
@@ -184,7 +178,6 @@ public class GamemodeOverhaul {
                 }
             }
         }
-
         commandSourceIn.sendFeedback(new TranslationTextComponent("commands.defaultgamemode.success", gamemode.getDisplayName()), true);
         return i;
     }
@@ -206,7 +199,6 @@ public class GamemodeOverhaul {
             e.onKillCommand();
             source.sendFeedback(new TranslationTextComponent("commands.kill.success.single", e.getDisplayName()), true);
         }
-
         return 0;
     }
 
@@ -214,7 +206,6 @@ public class GamemodeOverhaul {
         if (players.size() <= 0) {
             return 0;
         }
-
         for (ServerPlayerEntity player : players) {
             if (levels) {
                 player.addExperienceLevel(amount);
@@ -222,13 +213,11 @@ public class GamemodeOverhaul {
                 player.giveExperiencePoints(amount);
             }
         }
-
         if (players.size() == 1) {
             source.sendFeedback(new TranslationTextComponent("commands.experience.add." + (levels ? "levels" : "points") + ".success.single", amount, players.iterator().next().getDisplayName()), true);
         } else {
             source.sendFeedback(new TranslationTextComponent("commands.experience.add." + (levels ? "levels" : "points") + ".success.multiple", amount, players.size()), true);
         }
-
         return players.size();
     }
 
@@ -240,7 +229,6 @@ public class GamemodeOverhaul {
                 literalArgumentBuilder.then(Commands.literal(gametype.getName()).executes((context) -> setGameType(context.getSource(), gametype)));
             }
         }
-
         dispatcher.register(literalArgumentBuilder);
 
         literalArgumentBuilder = Commands.literal("dgm").requires((source) -> source.hasPermissionLevel(2));
@@ -250,7 +238,6 @@ public class GamemodeOverhaul {
                 literalArgumentBuilder.then(Commands.literal(Integer.toString(gametype.getID())).executes((context) -> setGameType(context.getSource(), gametype)));
             }
         }
-
         dispatcher.register(literalArgumentBuilder);
 
         literalArgumentBuilder = Commands.literal("dgm").requires((source) -> source.hasPermissionLevel(2));
@@ -264,7 +251,6 @@ public class GamemodeOverhaul {
                 }
             }
         }
-
         dispatcher.register(literalArgumentBuilder);
     }
 
@@ -276,7 +262,6 @@ public class GamemodeOverhaul {
                 literalArgumentBuilder.then(Commands.literal(Integer.toString(gametype.getID())).executes((context) -> setGameType(context.getSource(), gametype)));
             }
         }
-
         dispatcher.register(literalArgumentBuilder);
 
         literalArgumentBuilder = Commands.literal("defaultgamemode").requires((source) -> source.hasPermissionLevel(2));
@@ -290,7 +275,6 @@ public class GamemodeOverhaul {
                 }
             }
         }
-
         dispatcher.register(literalArgumentBuilder);
     }
 
@@ -405,10 +389,10 @@ public class GamemodeOverhaul {
 
     private void registerXP(CommandDispatcher<CommandSource> dispatcher) {
         LiteralArgumentBuilder<CommandSource> literalArgumentBuilder = Commands.literal(GMOConfig.COMMON.xpCommandID.get()).requires((source) -> source.hasPermissionLevel(2)).then(Commands.argument("amount[L]", StringArgumentType.word()).executes(context -> {
-            String input = StringArgumentType.getString(context, "amount[L]");
-            if (input.toLowerCase().endsWith("l")) {
+            String input = StringArgumentType.getString(context, "amount[L]").toUpperCase();
+            if (input.endsWith("L")) {
                 try {
-                    int i = Integer.parseInt(input.toLowerCase().replace("l", ""));
+                    int i = Integer.parseInt(input.replace("L", ""));
                     return addExperience(context.getSource(), Collections.singleton(context.getSource().asPlayer()), i, true);
                 } catch (NumberFormatException ignore) {
                     context.getSource().sendErrorMessage(new TranslationTextComponent("commands.xp.nan"));
@@ -423,18 +407,16 @@ public class GamemodeOverhaul {
             }
             return 0;
         }).then(Commands.argument("players", EntityArgument.players()).executes(context -> {
-            String input = StringArgumentType.getString(context, "amount[L]");
-            if (input.toLowerCase().endsWith("l")) {
+            String input = StringArgumentType.getString(context, "amount[L]").toUpperCase();
+            if (input.endsWith("L")) {
                 try {
-                    int i = Integer.parseInt(input.toLowerCase().replace("l", ""));
-                    return addExperience(context.getSource(), EntityArgument.getPlayers(context, "players"), i, true);
+                    return addExperience(context.getSource(), EntityArgument.getPlayers(context, "players"), Integer.parseInt(input.replace("L", "")), true);
                 } catch (NumberFormatException ignore) {
                     context.getSource().sendErrorMessage(new TranslationTextComponent("commands.xp.nan"));
                 }
             } else {
                 try {
-                    int i = Integer.parseInt(input);
-                    return addExperience(context.getSource(), EntityArgument.getPlayers(context, "players"), i, false);
+                    return addExperience(context.getSource(), EntityArgument.getPlayers(context, "players"), Integer.parseInt(input), false);
                 } catch (NumberFormatException ignore) {
                     context.getSource().sendErrorMessage(new TranslationTextComponent("commands.xp.nan"));
                 }
