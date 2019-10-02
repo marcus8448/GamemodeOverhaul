@@ -5,7 +5,7 @@ issueTrackerURL="https://github.com/marcus8448/GamemodeOverhaul/issues/"
 
 [[mods]]
     modId="gamemodeoverhaul"
-    version="1.14.4-1.4.2.1"
+    version="1.14.4-1.4.2.2"
     updateJSONURL="https://marcus8448.github.io/GamemodeOverhaul/version.json"
     displayURL="https://www.curseforge.com/minecraft/mc-mods/gamemodeoverhaul"
     displayName="GamemodeOverhaul"
