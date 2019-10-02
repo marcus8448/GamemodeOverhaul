@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "gamemodeoverhaul",
-  "version": "19w34a-1.0.1.2",
+  "version": "19w39a-1.0.1.5",
 
   "name": "GamemodeOverhaul",
   "description": "Adds back many pre-1.15/14/13 command arguments",
@@ -13,7 +13,7 @@
     "sources": "https://github.com/marcus8448/GamemodeOverhaul"
   },
 
-  "license": "",
+  "license": "LGPL v3",
   "icon": "assets/gamemodeoverhaul/icon.png",
 
   "environment": "*",
@@ -22,8 +22,8 @@
       "io.github.marcus8448.mods.gamemodeOverhaul.GamemodeOverhaul"
     ]
   },
-  "requires": {
-    "fabricloader": ">=0.4.0",
+  "depends": {
+    "fabricloader": ">=0.6.0",
     "fabric": "*"
   }
 }
