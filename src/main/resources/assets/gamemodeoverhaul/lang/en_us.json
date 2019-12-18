@@ -1,4 +1,5 @@
 {
   "gamemodeoverhaul.command.toggledownfall.feedback": "Toggled downfall",
-  "gamemodeoverhaul.command.xp.nan": "Not a number!"
+  "gamemodeoverhaul.command.xp.nan": "Not a number!",
+  "gamemodeoverhaul.commands.kill.fail": "You must specify an entity to kill!"
 }

@@ -1,3 +1,20 @@
+/*
+ * Copyright (C) 2019  marcus8448
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package io.github.marcus8448.mods.gamemodeOverhaul;
 
 import com.mojang.brigadier.CommandDispatcher;
@@ -27,23 +44,9 @@ import java.util.Collection;
 import java.util.Collections;
 
 /**
- * Copyright (C) 2019  marcus8448
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  * @author marcus8448
  */
+@SuppressWarnings("unused")
 public class GamemodeOverhaul implements ModInitializer {
     private static final Logger LOGGER = LogManager.getLogger("GamemodeOverhaul");
     private static final Marker GAMEMODE_OVERHAUL = MarkerManager.getMarker("GamemodeOverhaul");
@@ -130,9 +133,14 @@ public class GamemodeOverhaul implements ModInitializer {
     }
 
     private static int kill(ServerCommandSource source) {
-        source.getEntity().kill();
-        source.sendFeedback(new TranslatableText("commands.kill.success.single", source.getEntity().getDisplayName()), true);
-        return 1;
+        if (source.getEntity() != null) {
+            source.getEntity().kill();
+            source.sendFeedback(new TranslatableText("commands.kill.success.single", source.getEntity().getDisplayName()), true);
+            return 1;
+        } else {
+            source.sendError(new TranslatableText("gamemodeoverhaul.commands.kill.fail"));
+            return 0;
+        }
     }
 
     private static int addExperience(ServerCommandSource source, Collection<ServerPlayerEntity> players, int amount, boolean levels) {
@@ -250,18 +258,15 @@ public class GamemodeOverhaul implements ModInitializer {
                 context.getSource().getWorld().getLevelProperties().setThunderTime(6000);
                 context.getSource().getWorld().getLevelProperties().setRaining(true);
                 context.getSource().getWorld().getLevelProperties().setThundering(false);
-                context.getSource().getWorld().getLevelProperties().setThundering(false);
-                context.getSource().sendFeedback(/*new TranslatableText("gamemodeoverhaul.command.toggledownfall.feedback")*/ new LiteralText("Toggled downfall"), false);
-                return 6000;
             } else {
                 context.getSource().getWorld().getLevelProperties().setClearWeatherTime(6000);
                 context.getSource().getWorld().getLevelProperties().setRainTime(0);
                 context.getSource().getWorld().getLevelProperties().setThunderTime(0);
                 context.getSource().getWorld().getLevelProperties().setRaining(false);
-                context.getSource().getWorld().getLevelProperties().setThundering(false);
-                context.getSource().sendFeedback(/*new TranslatableText("gamemodeoverhaul.command.toggledownfall.feedback")*/ new LiteralText("Toggled downfall"), false);
-                return 6000;
             }
+            context.getSource().getWorld().getLevelProperties().setThundering(false);
+            context.getSource().sendFeedback(new TranslatableText("gamemodeoverhaul.command.toggledownfall.feedback"), false);
+            return 6000;
         }));
     }
 
@@ -291,14 +296,14 @@ public class GamemodeOverhaul implements ModInitializer {
                     int i = Integer.parseInt(input.toLowerCase().replace("l", ""));
                     return addExperience(context.getSource(), EntityArgumentType.getPlayers(context, "players"), i, true);
                 } catch (NumberFormatException ignore) {
-                    context.getSource().sendError(/*new TranslatableText("gamemodeoverhaul.command.xp.nan")*/ new LiteralText("Not a number!"));
+                    context.getSource().sendError(new TranslatableText("gamemodeoverhaul.command.xp.nan"));
                 }
             } else {
                 try {
                     int i = Integer.parseInt(input);
                     return addExperience(context.getSource(), EntityArgumentType.getPlayers(context, "players"), i, false);
                 } catch (NumberFormatException ignore) {
-                    context.getSource().sendError(/*new TranslatableText("gamemodeoverhaul.command.xp.nan")*/ new LiteralText("Not a number!"));
+                    context.getSource().sendError(new TranslatableText("gamemodeoverhaul.command.xp.nan"));
                 }
             }
             return 0;

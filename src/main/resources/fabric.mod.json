@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "gamemodeoverhaul",
-  "version": "19w39a-1.0.1.5",
+  "version": "1.15.1-1.0.1.6",
 
   "name": "GamemodeOverhaul",
   "description": "Adds back many pre-1.15/14/13 command arguments",
@@ -24,6 +24,7 @@
   },
   "depends": {
     "fabricloader": ">=0.6.0",
-    "fabric": "*"
+    "fabric-api-base": "*",
+    "fabric-commands-v0": "*"
   }
 }
