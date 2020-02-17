@@ -4,14 +4,11 @@ import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
 import net.minecraftforge.common.ForgeConfigSpec.Builder;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.config.ModConfig.ConfigReloading;
 import net.minecraftforge.fml.config.ModConfig.Loading;
+import net.minecraftforge.fml.config.ModConfig.Reloading;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
-
-import java.util.List;
-import java.util.function.Supplier;
 
 /**
  * Copyright (c) marcus8448 2019. All rights reserved.
@@ -29,15 +26,15 @@ public class GMOConfig {
         GamemodeOverhaul.LOGGER.debug(CONFIG, "Successfully loaded GamemodeOverhaul's config file!");
     }
 
-    @SubscribeEvent
-    public static void onFileChange(ConfigReloading configEvent) {
-        GamemodeOverhaul.LOGGER.fatal(CONFIG, "GamemodeOverhaul's config just got changed on the file system! This shouldn't happen!");
+    static {
+        Pair<GMOConfig.Common, ForgeConfigSpec> specPair = new Builder().configure(GMOConfig.Common::new);
+        commonSpec = specPair.getRight();
+        COMMON = specPair.getLeft();
     }
 
-    static {
-        Pair specPair = (new Builder()).configure(GMOConfig.Common::new);
-        commonSpec = (ForgeConfigSpec)specPair.getRight();
-        COMMON = (GMOConfig.Common)specPair.getLeft();
+    @SubscribeEvent
+    public static void onFileChange(Reloading configEvent) {
+        GamemodeOverhaul.LOGGER.fatal(CONFIG, "GamemodeOverhaul's config just got changed on the file system! This shouldn't happen!");
     }
 
 
