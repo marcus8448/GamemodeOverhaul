@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019  marcus8448
+ * Copyright (C) 2019-2020  marcus8448
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.registry.CommandRegistry;
+import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.minecraft.command.arguments.EntityArgumentType;
 import net.minecraft.network.MessageType;
 import net.minecraft.server.MinecraftServer;
@@ -37,8 +37,6 @@ import net.minecraft.world.GameMode;
 import net.minecraft.world.GameRules;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.Marker;
-import org.apache.logging.log4j.MarkerManager;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -49,17 +47,18 @@ import java.util.Collections;
 @SuppressWarnings("unused")
 public class GamemodeOverhaul implements ModInitializer {
     private static final Logger LOGGER = LogManager.getLogger("GamemodeOverhaul");
-    private static final Marker GAMEMODE_OVERHAUL = MarkerManager.getMarker("GamemodeOverhaul");
 
     @Override
     public void onInitialize() {
-        LOGGER.info(GAMEMODE_OVERHAUL, "GamemodeOverhaul is Initializing!");
-        CommandRegistry.INSTANCE.register(false, this::registerGamemodeCommands);
-        CommandRegistry.INSTANCE.register(false, this::registerDefaultGamemodeCommands);
-        CommandRegistry.INSTANCE.register(false, this::registerDifficultyCommand);
-        CommandRegistry.INSTANCE.register(false, this::registerQuickKillCommand);
-        CommandRegistry.INSTANCE.register(false, this::registerToggledownfallCommand);
-        CommandRegistry.INSTANCE.register(false, this::registerXPCommand);
+        LOGGER.info("GamemodeOverhaul is Initializing!");
+        CommandRegistrationCallback.EVENT.register((dispatcher, b) -> {
+            registerGamemodeCommands(dispatcher);
+            registerDefaultGamemodeCommands(dispatcher);
+            registerDifficultyCommand(dispatcher);
+            registerQuickKillCommand(dispatcher);
+            registerToggledownfallCommand(dispatcher);
+            registerXPCommand(dispatcher);
+        });
     }
 
     private static void commandFeedback(ServerCommandSource source, ServerPlayerEntity player, GameMode mode) {
