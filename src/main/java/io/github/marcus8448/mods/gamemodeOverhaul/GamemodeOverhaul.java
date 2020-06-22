@@ -34,7 +34,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 /**
- * Copyright (C) 2019  marcus8448
+ * Copyright (C) 2019-2020 marcus8448
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
