@@ -25,13 +25,13 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.minecraft.command.arguments.EntityArgumentType;
-import net.minecraft.network.MessageType;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Util;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.GameMode;
 import net.minecraft.world.GameRules;
@@ -67,7 +67,7 @@ public class GamemodeOverhaul implements ModInitializer {
             source.sendFeedback(new TranslatableText("commands.gamemode.success.self", text), true);
         } else {
             if (source.getWorld().getGameRules().getBoolean(GameRules.SEND_COMMAND_FEEDBACK)) {
-                player.sendChatMessage(new TranslatableText("gameMode.changed", text), MessageType.GAME_INFO);
+                player.sendSystemMessage(new TranslatableText("gameMode.changed", text), Util.NIL_UUID);
             }
 
             source.sendFeedback(new TranslatableText("commands.gamemode.success.other", player.getDisplayName(), text), true);
@@ -252,18 +252,10 @@ public class GamemodeOverhaul implements ModInitializer {
     private void registerToggledownfallCommand(CommandDispatcher<ServerCommandSource> dispatcher) {
         dispatcher.register(CommandManager.literal("toggledownfall").requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2)).executes(context -> {
             if (!(context.getSource().getWorld().isRaining() || context.getSource().getWorld().getLevelProperties().isRaining() || context.getSource().getWorld().isThundering() || context.getSource().getWorld().getLevelProperties().isThundering())) {
-                context.getSource().getWorld().getLevelProperties().setClearWeatherTime(0);
-                context.getSource().getWorld().getLevelProperties().setRainTime(6000);
-                context.getSource().getWorld().getLevelProperties().setThunderTime(6000);
-                context.getSource().getWorld().getLevelProperties().setRaining(true);
-                context.getSource().getWorld().getLevelProperties().setThundering(false);
+                context.getSource().getWorld().method_27910(0, 6000, true, false);
             } else {
-                context.getSource().getWorld().getLevelProperties().setClearWeatherTime(6000);
-                context.getSource().getWorld().getLevelProperties().setRainTime(0);
-                context.getSource().getWorld().getLevelProperties().setThunderTime(0);
-                context.getSource().getWorld().getLevelProperties().setRaining(false);
+                context.getSource().getWorld().method_27910(6000, 0, false, false);
             }
-            context.getSource().getWorld().getLevelProperties().setThundering(false);
             context.getSource().sendFeedback(new TranslatableText("gamemodeoverhaul.command.toggledownfall.feedback"), false);
             return 6000;
         }));
