@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "id": "gamemodeoverhaul",
-  "version": "1.15.2-1.0.1.8",
+  "version": "1.16.1-1.0.1.8",
   "name": "GamemodeOverhaul",
-  "description": "Adds back many pre-1.15/14/13 command arguments",
+  "description": "Adds back many pre-1.16/13 commands and their arguments",
   "authors": [
     "marcus8448"
   ],
@@ -11,7 +11,6 @@
     "homepage": "https://www.curseforge.com/minecraft/mc-mods/gamemodeoverhaul",
     "sources": "https://github.com/marcus8448/GamemodeOverhaul"
   },
-
   "license": "LGPL v3",
   "icon": "assets/gamemodeoverhaul/icon.png",
 
