@@ -12,11 +12,12 @@ import net.minecraft.command.arguments.EntityArgument;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.text.*;
+import net.minecraft.util.Util;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.GameType;
-import net.minecraft.world.dimension.DimensionType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -143,25 +144,25 @@ public class GamemodeOverhaul {
 
     }
 
-    @SubscribeEvent
-    @SuppressWarnings("unused")
-    public void welcomeMessage(EntityJoinWorldEvent event) {
-        if (event.getEntity() instanceof ServerPlayerEntity && GMOConfig.COMMON.enableWelcomeMessage.get()) {
-            ServerPlayerEntity player = (ServerPlayerEntity) event.getEntity();
-            player.sendMessage((new TranslationTextComponent("gamemodeoverhaul.welcomemessage")).setStyle((new Style()).setColor(TextFormatting.BLUE)), ChatType.SYSTEM);
-        }
-    }
-
     private static void sendGameModeFeedback(CommandSource source, ServerPlayerEntity player, GameType gameTypeIn) {
         ITextComponent itextcomponent = new TranslationTextComponent("gameMode." + gameTypeIn.getName());
         if (source.getEntity() == player) {
             source.sendFeedback(new TranslationTextComponent("commands.gamemode.success.self", itextcomponent), true);
         } else {
             if (source.getWorld().getGameRules().getBoolean(GameRules.SEND_COMMAND_FEEDBACK)) {
-                player.sendMessage(new TranslationTextComponent("gameMode.changed", itextcomponent));
+                player.sendMessage(new TranslationTextComponent("gameMode.changed", itextcomponent), Util.field_240973_b_);
             }
             source.sendFeedback(new TranslationTextComponent("commands.gamemode.success.other", player.getDisplayName(), itextcomponent), true);
         }
+    }
+
+    @SubscribeEvent
+    @SuppressWarnings("unused")
+    public void welcomeMessage(EntityJoinWorldEvent event) {
+//        if (event.getEntity() instanceof ServerPlayerEntity && GMOConfig.COMMON.enableWelcomeMessage.get()) {
+//            ServerPlayerEntity player = (ServerPlayerEntity) event.getEntity();
+//            player.sendMessage((new TranslationTextComponent("gamemodeoverhaul.welcomemessage")).func_230530_a_((Style.field_240709_b_).func_240712_a_(TextFormatting.BLUE)));
+//        }
     }
 
     private int setGameMode(CommandContext<CommandSource> source, Collection<? extends Entity> players, GameType gameTypeIn) {
@@ -198,7 +199,7 @@ public class GamemodeOverhaul {
 
     private int setDifficulty(CommandSource source, Difficulty difficulty) throws CommandSyntaxException {
         MinecraftServer minecraftserver = source.getServer();
-        if (minecraftserver.getWorld(DimensionType.OVERWORLD).getDifficulty() == difficulty) {
+        if (source.getWorld().getDifficulty() == difficulty) {
             throw FAILED_EXCEPTION.create(difficulty.getTranslationKey());
         } else {
             minecraftserver.setDifficultyForAllWorlds(difficulty, true);
@@ -381,23 +382,12 @@ public class GamemodeOverhaul {
     private void registerToggledownfall(CommandDispatcher<CommandSource> dispatcher) {
         dispatcher.register(Commands.literal("toggledownfall").requires((source) -> source.hasPermissionLevel(2)).executes(context -> {
             if (!(context.getSource().getWorld().isRaining() || context.getSource().getWorld().getWorldInfo().isRaining() || context.getSource().getWorld().isThundering() || context.getSource().getWorld().getWorldInfo().isThundering())) {
-                context.getSource().getWorld().getWorldInfo().setClearWeatherTime(0);
-                context.getSource().getWorld().getWorldInfo().setRainTime(6000);
-                context.getSource().getWorld().getWorldInfo().setThunderTime(6000);
-                context.getSource().getWorld().getWorldInfo().setRaining(true);
-                context.getSource().getWorld().getWorldInfo().setThundering(false);
-                context.getSource().getWorld().getWorldInfo().setThundering(false);
-                context.getSource().sendFeedback(new TranslationTextComponent("commands.toggledownfall"), false);
-                return 6000;
+                context.getSource().getWorld().func_241113_a_(0, 6000, true, false);
             } else {
-                context.getSource().getWorld().getWorldInfo().setClearWeatherTime(6000);
-                context.getSource().getWorld().getWorldInfo().setRainTime(0);
-                context.getSource().getWorld().getWorldInfo().setThunderTime(0);
-                context.getSource().getWorld().getWorldInfo().setRaining(false);
-                context.getSource().getWorld().getWorldInfo().setThundering(false);
-                context.getSource().sendFeedback(new TranslationTextComponent("commands.toggledownfall"), false);
-                return 6000;
+                context.getSource().getWorld().func_241113_a_(6000, 0, false, false);
             }
+            context.getSource().sendFeedback(new TranslationTextComponent("commands.toggledownfall"), false);
+            return 6000;
         }));
     }
 

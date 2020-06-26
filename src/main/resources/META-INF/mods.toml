@@ -1,11 +1,11 @@
 modLoader="javafml"
-loaderVersion="[31,)"
+loaderVersion="[32,)"
 issueTrackerURL="https://github.com/marcus8448/GamemodeOverhaul/issues/"
 #logoFile=""
 
 [[mods]]
     modId="gamemodeoverhaul"
-    version="1.15.2-1.4.2.3"
+    version="1.16.1-1.4.2.3"
     updateJSONURL="https://marcus8448.github.io/GamemodeOverhaul/version.json"
     displayURL="https://www.curseforge.com/minecraft/mc-mods/gamemodeoverhaul"
     displayName="GamemodeOverhaul"
@@ -25,13 +25,13 @@ See the CurseForge page for more details: https://www.curseforge.com/minecraft/m
 [[dependencies.gamemodeoverhaul]]
     modId="forge"
     mandatory=true
-    versionRange="[31,)"
+    versionRange="[32,)"
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.gamemodeoverhaul]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.15.2]"
+    versionRange="[1.16.1]"
     ordering="NONE"
     side="BOTH"

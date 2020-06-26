@@ -11,5 +11,5 @@
   "gamemodeoverhaul.configgui.enabledebugmessages": "Set this to true if you want GamemodeOverhaul to log debug messages",
   "commands.toggledownfall": "Toggled downfall",
   "commands.xp.nan": "Not a number!",
-  "gamemodeoverhaul.welcomemessage": "Thank you for using GamemodeOverhaul! [Version 1.15.2-1.4.2.2]"
+  "gamemodeoverhaul.welcomemessage": "Thank you for using GamemodeOverhaul! [Version 1.16.1-1.4.2.3]"
 }
