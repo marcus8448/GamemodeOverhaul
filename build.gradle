@@ -12,7 +12,7 @@ apply plugin: 'net.minecraftforge.gradle'
 
 apply plugin: 'eclipse'
 
-version = '1.16.1-1.4.2.3'
+version = '1.16.1-1.4.2.4'
 group = 'io.github.marcus8448.mods'
 archivesBaseName = 'GamemodeOverhaul'
 

@@ -10,6 +10,5 @@
   "gamemodeoverhaul.configgui.enablewelcomemessage": "Set this to false if you don't want the welcome message",
   "gamemodeoverhaul.configgui.enabledebugmessages": "Set this to true if you want GamemodeOverhaul to log debug messages",
   "commands.toggledownfall": "Toggled downfall",
-  "commands.xp.nan": "Not a number!",
-  "gamemodeoverhaul.welcomemessage": "Thank you for using GamemodeOverhaul! [Version 1.16.1-1.4.2.3]"
+  "commands.xp.nan": "Not a number!"
 }

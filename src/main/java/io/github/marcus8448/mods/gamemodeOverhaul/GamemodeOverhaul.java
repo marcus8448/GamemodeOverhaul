@@ -19,7 +19,6 @@ import net.minecraft.world.Difficulty;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.GameType;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -154,15 +153,6 @@ public class GamemodeOverhaul {
             }
             source.sendFeedback(new TranslationTextComponent("commands.gamemode.success.other", player.getDisplayName(), itextcomponent), true);
         }
-    }
-
-    @SubscribeEvent
-    @SuppressWarnings("unused")
-    public void welcomeMessage(EntityJoinWorldEvent event) {
-//        if (event.getEntity() instanceof ServerPlayerEntity && GMOConfig.COMMON.enableWelcomeMessage.get()) {
-//            ServerPlayerEntity player = (ServerPlayerEntity) event.getEntity();
-//            player.sendMessage((new TranslationTextComponent("gamemodeoverhaul.welcomemessage")).func_230530_a_((Style.field_240709_b_).func_240712_a_(TextFormatting.BLUE)));
-//        }
     }
 
     private int setGameMode(CommandContext<CommandSource> source, Collection<? extends Entity> players, GameType gameTypeIn) {
