@@ -19,11 +19,11 @@ import net.minecraft.world.Difficulty;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.GameType;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig.Type;
-import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -70,9 +70,9 @@ public class GamemodeOverhaul {
 
     @SubscribeEvent
     @SuppressWarnings("unused")
-    public void onServerStarting(FMLServerStartingEvent event) {
+    public void registerCommands(RegisterCommandsEvent event) {
         try {
-            CommandDispatcher<CommandSource> dispatcher = event.getCommandDispatcher();
+            CommandDispatcher<CommandSource> dispatcher = event.getDispatcher();
             LOGGER.info(GAMEMODE_OVERHAUL, "Registering Commands...");
 
             this.registerGamemode(dispatcher);
@@ -149,7 +149,7 @@ public class GamemodeOverhaul {
             source.sendFeedback(new TranslationTextComponent("commands.gamemode.success.self", itextcomponent), true);
         } else {
             if (source.getWorld().getGameRules().getBoolean(GameRules.SEND_COMMAND_FEEDBACK)) {
-                player.sendMessage(new TranslationTextComponent("gameMode.changed", itextcomponent), Util.field_240973_b_);
+                player.sendMessage(new TranslationTextComponent("gameMode.changed", itextcomponent), Util.DUMMY_UUID);
             }
             source.sendFeedback(new TranslationTextComponent("commands.gamemode.success.other", player.getDisplayName(), itextcomponent), true);
         }
