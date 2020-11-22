@@ -23,7 +23,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
-import net.minecraft.command.arguments.EntityArgumentType;
+import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
@@ -258,9 +258,9 @@ public class GamemodeOverhaulFabric implements ModInitializer {
     private void registerToggledownfallCommand(CommandDispatcher<ServerCommandSource> dispatcher) {
         dispatcher.register(CommandManager.literal("toggledownfall").requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2)).executes(context -> {
             if (!(context.getSource().getWorld().isRaining() || context.getSource().getWorld().getLevelProperties().isRaining() || context.getSource().getWorld().isThundering() || context.getSource().getWorld().getLevelProperties().isThundering())) {
-                context.getSource().getWorld().method_27910(0, 6000, true, false);
+                context.getSource().getWorld().setWeather(0, 6000, true, false);
             } else {
-                context.getSource().getWorld().method_27910(6000, 0, false, false);
+                context.getSource().getWorld().setWeather(6000, 0, false, false);
             }
             context.getSource().sendFeedback(new TranslatableText("gamemodeoverhaul.command.toggledownfall.feedback"), false);
             return 6000;
