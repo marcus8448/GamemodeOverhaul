@@ -1,13 +1,13 @@
 modLoader="javafml"
-loaderVersion="[33,)"
+loaderVersion="[33,34,35]"
+license="LGPLv3"
 issueTrackerURL="https://github.com/marcus8448/GamemodeOverhaul/issues/"
-license="LGPL v3"
 #logoFile=""
 
 [[mods]]
     modId="gamemodeoverhaul"
-    version="1.16.2-1.4.2.4"
-    updateJSONURL="https://marcus8448.github.io/GamemodeOverhaul/version.json"
+    version="1.16.4-1.4.2.4"
+#    updateJSONURL="https://marcus8448.github.io/GamemodeOverhaul/version.json"
     displayURL="https://www.curseforge.com/minecraft/mc-mods/gamemodeoverhaul"
     displayName="GamemodeOverhaul"
     authors="marcus8448"
@@ -24,15 +24,8 @@ See the CurseForge page for more details: https://www.curseforge.com/minecraft/m
 '''
 
 [[dependencies.gamemodeoverhaul]]
-    modId="forge"
-    mandatory=true
-    versionRange="[33,)"
-    ordering="NONE"
-    side="BOTH"
-
-[[dependencies.gamemodeoverhaul]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.16.2]"
+    versionRange="[1.16.2,1.16.3,1.16.4]"
     ordering="NONE"
     side="BOTH"
