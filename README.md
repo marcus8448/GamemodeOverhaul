@@ -1,5 +1,7 @@
 # [GamemodeOverhaul](https://www.curseforge.com/minecraft/mc-mods/gamemodeoverhaul/)
-[GamemodeOverhaul](https://marcus8448.github.io/GamemodeOverhaul) is a MinecraftForge mod for 1.13.2 that makes changing gamemodes much easier.
+[GamemodeOverhaul](https://marcus8448.github.io/GamemodeOverhaul) is a Fabric mod for 1.14+ that makes changing gamemodes much easier.
+
+# [The fabric edition's code has moved.](https://github.com/marcus8448/FabricMods)
 
 <a href="https://github.com/marcus8448/GamemodeOverhaul/commits"><img src="https://img.shields.io/github/last-commit/marcus8448/GamemodeOverhaul.svg?label=latest%20commit&style=flat-square"></a> <a href="https://github.com/marcus8448/GamemodeOverhaul/issues"><img src="https://img.shields.io/github/issues/marcus8448/GamemodeOverhaul.svg?style=flat-square"></a> <a href="https://www.curseforge.com/minecraft/mc-mods/gamemodeoverhaul/"><img src="https://cf.way2muchnoise.eu/short_gamemodeoverhaul.svg"></a>    
 
