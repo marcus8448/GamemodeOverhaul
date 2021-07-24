@@ -20,8 +20,7 @@ import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
 import net.minecraftforge.common.ForgeConfigSpec.Builder;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.config.ModConfig.Loading;
-import net.minecraftforge.fml.config.ModConfig.Reloading;
+import net.minecraftforge.fml.event.config.ModConfigEvent;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
@@ -33,7 +32,7 @@ public class GMOConfig {
     public static final GMOConfig.Common COMMON;
 
     @SubscribeEvent
-    public static void onLoad(Loading configEvent) {
+    public static void onLoad(ModConfigEvent.Loading configEvent) {
         GamemodeOverhaul.LOGGER.debug(CONFIG, "Successfully loaded GamemodeOverhaul's config file!");
     }
 
@@ -44,7 +43,7 @@ public class GMOConfig {
     }
 
     @SubscribeEvent
-    public static void onFileChange(Reloading configEvent) {
+    public static void onFileChange(ModConfigEvent.Reloading configEvent) {
         GamemodeOverhaul.LOGGER.fatal(CONFIG, "GamemodeOverhaul's config just got changed on the file system! This shouldn't happen!");
     }
 
