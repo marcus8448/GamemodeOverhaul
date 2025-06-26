@@ -1,0 +1,19 @@
+{
+  "title.gamemodeoverhaul.config": "GamemodeOverhaul Config",
+  "category.gamemodeoverhaul.general": "General",
+  "option.gamemodeoverhaul.enable_gamemode": "/gamemode 0/1/2/3/s/c/a/sp",
+  "option.gamemodeoverhaul.enable_gamemode.tooltip": "Set this to false if you don't want the mod to add additional arguments to the '/gamemode' command",
+  "option.gamemodeoverhaul.enable_gm": "/gm",
+  "option.gamemodeoverhaul.enable_gm.tooltip": "Set this to false if you don't want the mod to add the '/gm' command",
+  "option.gamemodeoverhaul.enable_no_args_gm": "/gmc, /gms, /gmsp and /gma",
+  "option.gamemodeoverhaul.enable_no_args_gm.tooltip": "Set this to false if you don't the mod to add '/gmc', '/gms', '/gmsp' and '/gma' commands",
+  "option.gamemodeoverhaul.enable_default_gamemode": "/defaultgamemode 0/1/2/3/s/c/a/sp",
+  "option.gamemodeoverhaul.enable_default_gamemode.tooltip": "Set this to false if you don't want the mod to add additional arguments to the '/defaultgamemode' command",
+  "option.gamemodeoverhaul.enable_dgm": "/dgm",
+  "option.gamemodeoverhaul.enable_dgm.tooltip": "Set this to false if you don't want the mod to add the '/dgm' command",
+  "option.gamemodeoverhaul.enable_difficulty": "/difficulty 0/1/2/3",
+  "option.gamemodeoverhaul.enable_difficulty.tooltip": "Set this to false if you don't want the mod to add the integer values for '/difficulty",
+  "option.gamemodeoverhaul.enable_toggledownfall": "/toggledownfall",
+  "option.gamemodeoverhaul.enable_toggledownfall.tooltip": "Set this to false if you don't want to have the mod add '/toggledownfall' back",
+  "commands.toggle_downfall": "Toggled downfall"
+}

@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "id": "${mod_id}",
+  "version": "${mod_version}",
+  "name": "${mod_name}",
+  "description": "${mod_description}",
+  "authors": [
+    "${mod_author}"
+  ],
+  "icon": "${mod_id}.png",
+  "license": "${mod_license}",
+  "entrypoints": {
+    "main": [
+      "dev.mlow.mods.gamemodeoverhaul.GamemodeOverhaulFabric"
+    ],
+    "client": [
+      "dev.mlow.mods.gamemodeoverhaul.client.GamemodeOverhaulFabricClient"
+    ],
+    "modmenu": [
+      "dev.mlow.mods.gamemodeoverhaul.compat.ModMenuHook"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=${min_fabric_loader}",
+    "minecraft": ">=${min_minecraft}"
+  }
+}
