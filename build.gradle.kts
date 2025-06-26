@@ -1,16 +1,13 @@
 import com.diffplug.gradle.spotless.SpotlessExtension
-import com.modrinth.minotaur.ModrinthExtension
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-val minecraft = project.property("minecraft.version").toString()
 val modId = project.property("mod.id").toString()
 val modName = project.property("mod.name").toString()
 val modVersion = project.property("mod.version").toString()
 val modDescription = project.property("mod.description").toString()
 val modAuthor = project.property("mod.author").toString()
 val modLicense = project.property("mod.license").toString()
-val modrinthId = (project.property("mod.modrinth.id") ?: "").toString()
 
 plugins {
     id("fabric-loom") version("1.10-SNAPSHOT") apply(false)
@@ -158,25 +155,6 @@ subprojects {
             leadingTabsToSpaces()
             removeUnusedImports()
             trimTrailingWhitespace()
-        }
-    }
-
-    if (extensions.findByType(ModrinthExtension::class) != null) {
-        extensions.configure<ModrinthExtension> {
-            token.set(System.getenv("MODRINTH_TOKEN"))
-            projectId.set(modrinthId)
-            uploadFile.set(tasks.findByName("remapJar") ?: tasks.getByName("jar"))
-            versionNumber.set("${modVersion}+${minecraft}-${this@subprojects.name}")
-            versionName.set("$modName v${modVersion} (${this@subprojects.name.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }} ${minecraft})")
-            versionType.set("release")
-
-            gameVersions.addAll(minecraft)
-            loaders.add(this@subprojects.name)
-            syncBodyFrom.set(rootProject.file("README.md").readText())
-
-            if (System.getenv().containsKey("CHANGELOG")) {
-                changelog.set(System.getenv("CHANGELOG").toString())
-            }
         }
     }
 }

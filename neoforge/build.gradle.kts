@@ -1,4 +1,6 @@
+import com.modrinth.minotaur.ModrinthExtension
 import net.darkhax.curseforgegradle.TaskPublishCurseForge
+import org.gradle.kotlin.dsl.configure
 
 val minecraft = project.property("minecraft.version").toString()
 val modName = project.property("mod.name").toString()
@@ -7,6 +9,7 @@ val neoforge = project.property("neoforge.version").toString()
 val parchmentMc = project.property("parchment.mc").toString()
 val parchmentVersion = project.property("parchment.version").toString()
 val curseforgeId = (project.property("mod.curseforge.id") ?: "").toString()
+val modrinthId = (project.property("mod.modrinth.id") ?: "").toString()
 
 plugins {
     `java-library`
@@ -88,5 +91,27 @@ tasks.register<TaskPublishCurseForge>("curseforge") {
     mainFile.addGameVersion(project.name)
     mainFile.addGameVersion(minecraft)
     mainFile.displayName = "$modName $modVersion (${project.name.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }} ${minecraft})"
+
+    if (System.getenv().containsKey("CHANGELOG")) {
+        mainFile.changelog = System.getenv("CHANGELOG").toString()
+    } else {
+        mainFile.changelog = "No changelog provided."
+    }
 }
 
+extensions.configure<ModrinthExtension> {
+    token.set(System.getenv("MODRINTH_TOKEN"))
+    projectId.set(modrinthId)
+    uploadFile.set(tasks.findByName("remapJar") ?: tasks.getByName("jar"))
+    versionNumber.set("${modVersion}+${minecraft}-${project.name}")
+    versionName.set("$modName v${modVersion} (${project.name.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }} ${minecraft})")
+    versionType.set("release")
+
+    gameVersions.addAll(minecraft)
+    loaders.add(project.name)
+    syncBodyFrom.set(rootProject.file("README.md").readText())
+
+    if (System.getenv().containsKey("CHANGELOG")) {
+        changelog.set(System.getenv("CHANGELOG").toString())
+    }
+}
