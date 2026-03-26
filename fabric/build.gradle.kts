@@ -15,9 +15,9 @@ val curseforgeId = (project.property("mod.curseforge.id") ?: "").toString()
 val modrinthId = (project.property("mod.modrinth.id") ?: "").toString()
 
 plugins {
-    id("fabric-loom")
-    id("com.modrinth.minotaur") version("2.8.7")
-    id("net.darkhax.curseforgegradle") version("1.1.26")
+    id("net.fabricmc.fabric-loom")
+    id("com.modrinth.minotaur")
+    id("net.darkhax.curseforgegradle")
 }
 
 loom {
@@ -30,10 +30,6 @@ loom {
     interfaceInjection.enableDependencyInterfaceInjection.set(false)
     interfaceInjection.getIsEnabled().set(false)
     enableTransitiveAccessWideners.set(false)
-
-//    mixin {
-//        defaultRefmapName.set("gamemodeoverhaul.refmap.json")
-//    }
 
     runs {
         named("client") {
@@ -75,20 +71,21 @@ repositories {
 
 dependencies {
     minecraft("com.mojang:minecraft:$minecraft")
-    mappings(loom.officialMojangMappings())
-    modImplementation("net.fabricmc:fabric-loader:$fabricLoader")
-    compileOnly(project(":common", "namedElements"))
+    implementation("net.fabricmc:fabric-loader:$fabricLoader")
+    compileOnly(project(":common"))
+//    commonJava project(path: ':common', configuration: 'commonJava')
+//    commonResources project(path: ':common', configuration: 'commonResources')
 
     fabricModules.forEach {
-        modImplementation(fabricApi.module(it, fabricAPI))
+        implementation(fabricApi.module(it, fabricAPI))
     }
-    modImplementation("com.terraformersmc:modmenu:${modmenu}") { isTransitive = false }
-    modImplementation("me.shedaniel.cloth:cloth-config-fabric:${clothConfig}") {
-        exclude(group = "net.fabricmc")
-        exclude(group = "net.fabricmc.fabric-api")
-    }
+    implementation("com.terraformersmc:modmenu:${modmenu}") { isTransitive = false }
+//    implementation("me.shedaniel.cloth:cloth-config-fabric:${clothConfig}") {
+//        exclude(group = "net.fabricmc")
+//        exclude(group = "net.fabricmc.fabric-api")
+//    }
 
-    modRuntimeOnly("net.fabricmc.fabric-api:fabric-api:$fabricAPI")
+    runtimeOnly("net.fabricmc.fabric-api:fabric-api:$fabricAPI")
 }
 
 tasks.compileJava {
@@ -115,7 +112,7 @@ modrinth {
 
 tasks.register<TaskPublishCurseForge>("curseforge") {
     apiToken = System.getenv("CURSEFORGE_TOKEN").toString()
-    val mainFile = upload(curseforgeId, tasks.findByName("remapJar") ?: tasks.getByName("jar"))
+    val mainFile = upload(curseforgeId, tasks.getByName("jar"))
     mainFile.addGameVersion(project.name)
     mainFile.addGameVersion(minecraft)
     mainFile.displayName = "$modName $modVersion (${project.name.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }} ${minecraft})"
@@ -131,7 +128,7 @@ tasks.register<TaskPublishCurseForge>("curseforge") {
 extensions.configure<ModrinthExtension> {
     token.set(System.getenv("MODRINTH_TOKEN"))
     projectId.set(modrinthId)
-    uploadFile.set(tasks.findByName("remapJar") ?: tasks.getByName("jar"))
+    uploadFile.set(tasks.getByName("jar"))
     versionNumber.set("${modVersion}+${minecraft}-${project.name}")
     versionName.set("$modName v${modVersion} (${project.name.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }} ${minecraft})")
     versionType.set("release")

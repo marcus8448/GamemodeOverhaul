@@ -1,6 +1,6 @@
 /*
  * GamemodeOverhaul
- * Copyright (C) 2019-2025 marcus8448
+ * Copyright (C) 2019-2026 marcus8448
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -28,6 +28,7 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.server.commands.GameModeCommand;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
@@ -54,7 +55,7 @@ public class GamemodeOverhaulClientForge {
 
     private static void registerGamemode(@NotNull CommandDispatcher<CommandSourceStack> dispatcher) {
         LiteralArgumentBuilder<CommandSourceStack> node = Commands.literal("gamemode")
-                .requires(stack -> stack.hasPermission(2));
+                .requires(Commands.hasPermission(GameModeCommand.PERMISSION_CHECK));
         for (GameType type : GameType.values()) {
             node.then(Commands.literal(String.valueOf(type.ordinal()))
                             .executes(context -> redirectToServer("gamemode " + type.getName()))
@@ -70,7 +71,7 @@ public class GamemodeOverhaulClientForge {
 
     private static void registerGm(@NotNull CommandDispatcher<CommandSourceStack> dispatcher) {
         LiteralArgumentBuilder<CommandSourceStack> node = Commands.literal("gm")
-                .requires(stack -> stack.hasPermission(2));
+                .requires(Commands.hasPermission(GameModeCommand.PERMISSION_CHECK));
         for (GameType type : GameType.values()) {
             node.then(Commands.literal(String.valueOf(type.ordinal()))
                             .executes(context -> redirectToServer("gamemode " + type.getName()))
@@ -87,7 +88,7 @@ public class GamemodeOverhaulClientForge {
     private static void registerGmNoArgs(@NotNull CommandDispatcher<CommandSourceStack> dispatcher) {
         for (GameType type : GameType.values()) {
             dispatcher.register(Commands.literal("gm" + GamemodeOverhaulCommon.createShort(type))
-                    .requires(stack -> stack.hasPermission(2))
+                    .requires(Commands.hasPermission(GameModeCommand.PERMISSION_CHECK))
                     .executes(context -> redirectToServer("gamemode " + type.getName()))
                     .then(Commands.argument("target", EntityArgument.players())
                             .executes(context -> redirectToServer("gamemode " + type.getName() + ' ' + captureLastArgument(context)))));
@@ -95,7 +96,7 @@ public class GamemodeOverhaulClientForge {
     }
 
     private static void registerDefaultGamemode(@NotNull CommandDispatcher<CommandSourceStack> dispatcher) {
-        LiteralArgumentBuilder<CommandSourceStack> node = Commands.literal("defaultgamemode").requires(stack -> stack.hasPermission(2));
+        LiteralArgumentBuilder<CommandSourceStack> node = Commands.literal("defaultgamemode").requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS));
         for (GameType type : GameType.values()) {
             node.then(Commands.literal(String.valueOf(type.ordinal()))
                             .executes(context -> redirectToServer("defaultgamemode " + type.getName())))
@@ -107,7 +108,7 @@ public class GamemodeOverhaulClientForge {
 
     private static void registerDgm(@NotNull CommandDispatcher<CommandSourceStack> dispatcher) {
         LiteralArgumentBuilder<CommandSourceStack> node = Commands.literal("dgm")
-                .requires(stack -> stack.hasPermission(2));
+                .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS));
         for (GameType type : GameType.values()) {
             node.then(Commands.literal(String.valueOf(type.ordinal()))
                             .executes(context -> redirectToServer("defaultgamemode " + type.getName())))
@@ -118,15 +119,15 @@ public class GamemodeOverhaulClientForge {
     }
 
     private static void registerDifficulty(@NotNull CommandDispatcher<CommandSourceStack> dispatcher) {
-        LiteralArgumentBuilder<CommandSourceStack> node = Commands.literal("difficulty").requires(stack -> stack.hasPermission(2));
+        LiteralArgumentBuilder<CommandSourceStack> node = Commands.literal("difficulty").requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS));
         for (Difficulty value : Difficulty.values()) {
-            node.then(Commands.literal(String.valueOf(value.ordinal())).executes(context -> redirectToServer("difficulty " + value.getKey())));
+            node.then(Commands.literal(String.valueOf(value.ordinal())).executes(_ -> redirectToServer("difficulty " + value.getSerializedName())));
         }
         dispatcher.register(node);
     }
 
     private static void registerToggleDownfall(@NotNull CommandDispatcher<CommandSourceStack> dispatcher) {
-        dispatcher.register(Commands.literal("toggledownfall").requires(stack -> stack.hasPermission(2))
+        dispatcher.register(Commands.literal("toggledownfall").requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
                 .executes((context) -> toggleDownfall(context.getSource())));
     }
 
@@ -134,10 +135,10 @@ public class GamemodeOverhaulClientForge {
         Level level = source.getUnsidedLevel();
         LocalPlayer player = Minecraft.getInstance().player;
         assert player != null;
-        if (level.isRaining() || level.getLevelData().isRaining() || level.isThundering() || level.getLevelData().isThundering()) {
-            player.connection.sendUnsignedCommand("weather clear");
+        if (level.isRaining() || level.isThundering()) {
+            player.connection.sendCommand("weather clear");
         } else {
-            player.connection.sendUnsignedCommand("weather rain");
+            player.connection.sendCommand("weather rain");
         }
         return 1;
     }
@@ -145,7 +146,7 @@ public class GamemodeOverhaulClientForge {
     private static int redirectToServer(@NotNull String command) {
         LocalPlayer player = Minecraft.getInstance().player;
         assert player != null;
-        player.connection.sendUnsignedCommand(command);
+        player.connection.sendCommand(command);
         return 1;
     }
 

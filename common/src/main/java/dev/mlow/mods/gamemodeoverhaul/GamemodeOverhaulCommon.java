@@ -1,6 +1,6 @@
 /*
  * GamemodeOverhaul
- * Copyright (C) 2019-2025 marcus8448
+ * Copyright (C) 2019-2026 marcus8448
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -28,7 +28,8 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.commands.GameModeCommand;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.level.GameType;
 import org.jetbrains.annotations.Contract;
@@ -56,7 +57,7 @@ public class GamemodeOverhaulCommon {
     }
 
     private static void registerGamemode(@NotNull CommandDispatcher<CommandSourceStack> dispatcher) {
-        LiteralArgumentBuilder<CommandSourceStack> node = Commands.literal("gamemode").requires(stack -> stack.hasPermission(2));
+        LiteralArgumentBuilder<CommandSourceStack> node = Commands.literal("gamemode").requires(Commands.hasPermission(GameModeCommand.PERMISSION_CHECK));
         for (GameType type : GameType.values()) {
             node.then(Commands.literal(String.valueOf(type.ordinal()))
                             .executes(gamemodeCommand(dispatcher, type))
@@ -71,7 +72,7 @@ public class GamemodeOverhaulCommon {
     }
 
     private static void registerGm(@NotNull CommandDispatcher<CommandSourceStack> dispatcher) {
-        LiteralCommandNode<CommandSourceStack> gm = Commands.literal("gm").requires(stack -> stack.hasPermission(2)).build();
+        LiteralCommandNode<CommandSourceStack> gm = Commands.literal("gm").requires(Commands.hasPermission(GameModeCommand.PERMISSION_CHECK)).build();
         for (CommandNode<CommandSourceStack> node : dispatcher.getRoot().getChild("gamemode").getChildren()) {
             gm.addChild(node);
         }
@@ -81,7 +82,7 @@ public class GamemodeOverhaulCommon {
     private static void registerGmNoArgs(@NotNull CommandDispatcher<CommandSourceStack> dispatcher) {
         for (GameType type : GameType.values()) {
             dispatcher.register(Commands.literal("gm" + createShort(type))
-                    .requires(stack -> stack.hasPermission(2))
+                    .requires(Commands.hasPermission(GameModeCommand.PERMISSION_CHECK))
                     .executes(gamemodeCommand(dispatcher, type))
                     .then(Commands.argument("target", EntityArgument.players())
                             .executes(targetedGamemodeCommandShort(dispatcher, type))));
@@ -89,7 +90,7 @@ public class GamemodeOverhaulCommon {
     }
 
     private static void registerDefaultGamemode(@NotNull CommandDispatcher<CommandSourceStack> dispatcher) {
-        LiteralArgumentBuilder<CommandSourceStack> node = Commands.literal("defaultgamemode").requires(stack -> stack.hasPermission(2));
+        LiteralArgumentBuilder<CommandSourceStack> node = Commands.literal("defaultgamemode").requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS));
         for (GameType type : GameType.values()) {
             node.then(Commands.literal(String.valueOf(type.ordinal())).executes(defaultgamemodeCommand(dispatcher, type)))
                     .then(Commands.literal(createShort(type)).executes(defaultgamemodeCommand(dispatcher, type)));
@@ -98,7 +99,7 @@ public class GamemodeOverhaulCommon {
     }
 
     private static void registerDgm(@NotNull CommandDispatcher<CommandSourceStack> dispatcher) {
-        LiteralCommandNode<CommandSourceStack> gm = Commands.literal("dgm").requires(stack -> stack.hasPermission(2)).build();
+        LiteralCommandNode<CommandSourceStack> gm = Commands.literal("dgm").requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS)).build();
         for (CommandNode<CommandSourceStack> node : dispatcher.getRoot().getChild("defaultgamemode").getChildren()) {
             gm.addChild(node);
         }
@@ -106,26 +107,26 @@ public class GamemodeOverhaulCommon {
     }
 
     private static void registerDifficulty(@NotNull CommandDispatcher<CommandSourceStack> dispatcher) {
-        LiteralArgumentBuilder<CommandSourceStack> node = Commands.literal("difficulty").requires(stack -> stack.hasPermission(2));
+        LiteralArgumentBuilder<CommandSourceStack> node = Commands.literal("difficulty").requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS));
         CommandNode<CommandSourceStack> difficulty = dispatcher.getRoot().getChild("difficulty");
         for (Difficulty value : Difficulty.values()) {
             node.then(Commands.literal(String.valueOf(value.ordinal()))
-                    .executes(difficulty.getChild(value.getKey()).getCommand()));
+                    .executes(difficulty.getChild(value.getSerializedName()).getCommand()));
         }
         dispatcher.register(node);
     }
 
     private static void registerToggleDownfall(@NotNull CommandDispatcher<CommandSourceStack> dispatcher) {
-        dispatcher.register(Commands.literal("toggledownfall").requires(stack -> stack.hasPermission(2))
+        dispatcher.register(Commands.literal("toggledownfall").requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
                 .executes((context) -> toggleDownfall(context.getSource())));
     }
 
     private static int toggleDownfall(@NotNull CommandSourceStack source) {
-        ServerLevel level = source.getLevel();
-        if (level.isRaining() || level.getLevelData().isRaining() || level.isThundering() || level.getLevelData().isThundering()) {
-            level.setWeatherParameters(6000, 0, false, false);
+        MinecraftServer server = source.getServer();
+        if (server.getWeatherData().isRaining() || server.getWeatherData().isThundering()) {
+            server.setWeatherParameters(6000, 0, false, false);
         } else {
-            level.setWeatherParameters(0, 6000, true, false);
+            server.setWeatherParameters(0, 6000, true, false);
         }
         source.sendSuccess(() -> Component.translatable("commands.toggle_downfall"), false);
         return 1;

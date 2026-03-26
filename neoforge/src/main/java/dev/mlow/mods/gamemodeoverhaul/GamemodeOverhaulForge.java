@@ -1,6 +1,6 @@
 /*
  * GamemodeOverhaul
- * Copyright (C) 2019-2025 marcus8448
+ * Copyright (C) 2019-2026 marcus8448
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -37,7 +37,7 @@ public class GamemodeOverhaulForge {
         container.getEventBus().addListener(CONFIG::onLoad);
         NeoForge.EVENT_BUS.addListener(this::registerCommands);
 
-        if (FMLEnvironment.dist.isClient()) {
+        if (FMLEnvironment.getDist().isClient()) {
             NeoForge.EVENT_BUS.addListener(GamemodeOverhaulClientForge::registerClientCommands);
         }
     }

@@ -1,6 +1,6 @@
 /*
  * GamemodeOverhaul
- * Copyright (C) 2019-2025 marcus8448
+ * Copyright (C) 2019-2026 marcus8448
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -19,14 +19,13 @@ package dev.mlow.mods.gamemodeoverhaul.compat;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
-import net.fabricmc.loader.api.FabricLoader;
 
 public class ModMenuHook implements ModMenuApi {
     @Override
     public ConfigScreenFactory<?> getModConfigScreenFactory() {
-        if (FabricLoader.getInstance().isModLoaded("cloth-config")) {
-            return ClothConfigScreen::createScreenFactory;
-        }
+//        if (FabricLoader.getInstance().isModLoaded("cloth-config")) {
+//            return ClothConfigScreen::createScreenFactory;
+//        }
         return screen -> null;
     }
 }
