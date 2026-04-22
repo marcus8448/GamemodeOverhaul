@@ -73,17 +73,15 @@ dependencies {
     minecraft("com.mojang:minecraft:$minecraft")
     implementation("net.fabricmc:fabric-loader:$fabricLoader")
     compileOnly(project(":common"))
-//    commonJava project(path: ':common', configuration: 'commonJava')
-//    commonResources project(path: ':common', configuration: 'commonResources')
 
     fabricModules.forEach {
         implementation(fabricApi.module(it, fabricAPI))
     }
     implementation("com.terraformersmc:modmenu:${modmenu}") { isTransitive = false }
-//    implementation("me.shedaniel.cloth:cloth-config-fabric:${clothConfig}") {
-//        exclude(group = "net.fabricmc")
-//        exclude(group = "net.fabricmc.fabric-api")
-//    }
+    implementation("me.shedaniel.cloth:cloth-config-fabric:${clothConfig}") {
+        exclude(group = "net.fabricmc")
+        exclude(group = "net.fabricmc.fabric-api")
+    }
 
     runtimeOnly("net.fabricmc.fabric-api:fabric-api:$fabricAPI")
 }

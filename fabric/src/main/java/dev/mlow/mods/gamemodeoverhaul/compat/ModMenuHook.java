@@ -19,13 +19,14 @@ package dev.mlow.mods.gamemodeoverhaul.compat;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
+import net.fabricmc.loader.api.FabricLoader;
 
 public class ModMenuHook implements ModMenuApi {
     @Override
     public ConfigScreenFactory<?> getModConfigScreenFactory() {
-//        if (FabricLoader.getInstance().isModLoaded("cloth-config")) {
-//            return ClothConfigScreen::createScreenFactory;
-//        }
-        return screen -> null;
+        if (FabricLoader.getInstance().isModLoaded("cloth-config")) {
+            return ClothConfigScreen::createScreenFactory;
+        }
+        return _ -> null;
     }
 }

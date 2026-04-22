@@ -32,13 +32,23 @@ import net.minecraft.server.commands.GameModeCommand;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.RegisterClientCommandsEvent;
+import net.neoforged.neoforge.client.gui.ConfigurationScreen;
+import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+@Mod(value = GamemodeOverhaulCommon.MOD_ID, dist = Dist.CLIENT)
 public class GamemodeOverhaulClientForge {
+    public GamemodeOverhaulClientForge(ModContainer container) {
+        container.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
+    }
+
     public static void registerClientCommands(@NotNull RegisterClientCommandsEvent event) {
         CommandDispatcher<CommandSourceStack> dispatcher = event.getDispatcher();
         if (GamemodeOverhaulCommon.CONFIG.enableGamemode()) registerGamemode(dispatcher);
@@ -58,11 +68,11 @@ public class GamemodeOverhaulClientForge {
                 .requires(Commands.hasPermission(GameModeCommand.PERMISSION_CHECK));
         for (GameType type : GameType.values()) {
             node.then(Commands.literal(String.valueOf(type.ordinal()))
-                            .executes(context -> redirectToServer("gamemode " + type.getName()))
+                            .executes(_ -> redirectToServer("gamemode " + type.getName()))
                             .then(Commands.argument("target", EntityArgument.players())
                                     .executes(context -> redirectToServer("gamemode " + type.getName() + ' ' + captureLastArgument(context)))))
                     .then(Commands.literal(GamemodeOverhaulCommon.createShort(type))
-                            .executes(context -> redirectToServer("gamemode " + type.getName()))
+                            .executes(_ -> redirectToServer("gamemode " + type.getName()))
                             .then(Commands.argument("target", EntityArgument.players())
                                     .executes(context -> redirectToServer("gamemode " + type.getName() + ' ' + captureLastArgument(context)))));
         }
@@ -74,11 +84,11 @@ public class GamemodeOverhaulClientForge {
                 .requires(Commands.hasPermission(GameModeCommand.PERMISSION_CHECK));
         for (GameType type : GameType.values()) {
             node.then(Commands.literal(String.valueOf(type.ordinal()))
-                            .executes(context -> redirectToServer("gamemode " + type.getName()))
+                            .executes(_ -> redirectToServer("gamemode " + type.getName()))
                             .then(Commands.argument("target", EntityArgument.players())
                                     .executes(context -> redirectToServer("gamemode " + type.getName() + ' ' + captureLastArgument(context)))))
                     .then(Commands.literal(GamemodeOverhaulCommon.createShort(type))
-                            .executes(context -> redirectToServer("gamemode " + type.getName()))
+                            .executes(_ -> redirectToServer("gamemode " + type.getName()))
                             .then(Commands.argument("target", EntityArgument.players())
                                     .executes(context -> redirectToServer("gamemode " + type.getName() + ' ' + captureLastArgument(context)))));
         }
@@ -89,7 +99,7 @@ public class GamemodeOverhaulClientForge {
         for (GameType type : GameType.values()) {
             dispatcher.register(Commands.literal("gm" + GamemodeOverhaulCommon.createShort(type))
                     .requires(Commands.hasPermission(GameModeCommand.PERMISSION_CHECK))
-                    .executes(context -> redirectToServer("gamemode " + type.getName()))
+                    .executes(_ -> redirectToServer("gamemode " + type.getName()))
                     .then(Commands.argument("target", EntityArgument.players())
                             .executes(context -> redirectToServer("gamemode " + type.getName() + ' ' + captureLastArgument(context)))));
         }
@@ -99,9 +109,9 @@ public class GamemodeOverhaulClientForge {
         LiteralArgumentBuilder<CommandSourceStack> node = Commands.literal("defaultgamemode").requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS));
         for (GameType type : GameType.values()) {
             node.then(Commands.literal(String.valueOf(type.ordinal()))
-                            .executes(context -> redirectToServer("defaultgamemode " + type.getName())))
+                            .executes(_ -> redirectToServer("defaultgamemode " + type.getName())))
                     .then(Commands.literal(GamemodeOverhaulCommon.createShort(type))
-                            .executes(context -> redirectToServer("defaultgamemode " + type.getName())));
+                            .executes(_ -> redirectToServer("defaultgamemode " + type.getName())));
         }
         dispatcher.register(node);
     }
@@ -111,9 +121,9 @@ public class GamemodeOverhaulClientForge {
                 .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS));
         for (GameType type : GameType.values()) {
             node.then(Commands.literal(String.valueOf(type.ordinal()))
-                            .executes(context -> redirectToServer("defaultgamemode " + type.getName())))
+                            .executes(_ -> redirectToServer("defaultgamemode " + type.getName())))
                     .then(Commands.literal(GamemodeOverhaulCommon.createShort(type))
-                            .executes(context -> redirectToServer("defaultgamemode " + type.getName())));
+                            .executes(_ -> redirectToServer("defaultgamemode " + type.getName())));
         }
         dispatcher.register(node);
     }
@@ -153,7 +163,7 @@ public class GamemodeOverhaulClientForge {
     @Contract(pure = true)
     private static @NotNull String captureLastArgument(@NotNull CommandContext<CommandSourceStack> source) {
         List<ParsedCommandNode<CommandSourceStack>> nodes = source.getNodes();
-        StringRange node = nodes.get(nodes.size() - 1).getRange();
+        StringRange node = nodes.getLast().getRange();
         return source.getInput().substring(node.getStart(), node.getEnd());
     }
 }

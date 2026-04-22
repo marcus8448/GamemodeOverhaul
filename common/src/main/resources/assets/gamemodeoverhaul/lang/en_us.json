@@ -15,5 +15,6 @@
   "option.gamemodeoverhaul.enable_difficulty.tooltip": "Set this to false if you don't want the mod to add the integer values for '/difficulty",
   "option.gamemodeoverhaul.enable_toggledownfall": "/toggledownfall",
   "option.gamemodeoverhaul.enable_toggledownfall.tooltip": "Set this to false if you don't want to have the mod add '/toggledownfall' back",
+  "gamemodeoverhaul.configuration.commands": "Commands",
   "commands.toggle_downfall": "Toggled downfall"
 }
